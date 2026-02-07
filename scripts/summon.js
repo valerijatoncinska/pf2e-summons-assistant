@@ -47,14 +47,14 @@ export async function summon(
       selectedActorUuid = allowedSpecificUuids[0];
     } else {
       selectedActorUuid = await foundrySummons.SummonMenu.start({
-        //packs: ['pf2e.pathfinder-monster-core'],
+        packs: ['vals-summons-for-pf2e.animal-summons'],
         noSummon: true,
         filter: (candidateActor) => {
           const isCommonAndValidLevel =
             candidateActor.system.traits.rarity === "common" &&
             candidateActor.system.details.level.value <= summonLevel;
 
-          const hasValidTraits =
+            const hasValidTraits =
             requiredTraits.length === 0 ||
             candidateActor.system.traits.value.some((actorTrait) =>
               requiredTraits.some(
