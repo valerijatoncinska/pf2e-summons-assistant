@@ -47,7 +47,23 @@ export async function summon(
       selectedActorUuid = allowedSpecificUuids[0];
     } else {
       selectedActorUuid = await foundrySummons.SummonMenu.start({
-        packs: ['vals-summons-for-pf2e.animal-summons'],
+        packs: [
+          'vals-summons-for-pf2e.animal-summons',
+          'vals-summons-for-pf2e.celestial-summons',
+          'vals-summons-for-pf2e.construct-summons',
+          'vals-summons-for-pf2e.dragon-summons',
+          'vals-summons-for-pf2e.elemental-summons',
+          'vals-summons-for-pf2e.entity-summons',
+          'vals-summons-for-pf2e.fey-summons',
+          'vals-summons-for-pf2e.fiend-summons',
+          'vals-summons-for-pf2e.giant-summons',
+          'vals-summons-for-pf2e.lesser-servitor-summons',
+          'vals-summons-for-pf2e.monitor-summons',
+          'vals-summons-for-pf2e.plant-or-fungus-summons',
+          'vals-summons-for-pf2e.robot-summons',
+          'vals-summons-for-pf2e.undead-summons',
+          'pf2e-summons-assistant-tonval-ru.pf2e-summons-assistant-actors'
+        ],
         noSummon: true,
         filter: (candidateActor) => {
           const isCommonAndValidLevel =
@@ -230,47 +246,47 @@ export function getTraditionalSummonerSpellDetails(uuid, rank) {
   const details = { traits: [], rank };
   switch (uuid) {
     case SOURCES.SUMMON.SUMMON_DRAGON:
-      details.traits = ["dragon","tonval"];
+      details.traits = ["dragon"];
       break;
     case SOURCES.SUMMON.SUMMON_UNDEAD:
-      details.traits = ["undead","tonval"];
+      details.traits = ["undead"];
       break;
     case SOURCES.SUMMON.SUMMON_CELESTIAL:
-      details.traits = ["celestial","tonval"];
+      details.traits = ["celestial"];
       break;
     case SOURCES.SUMMON.SUMMON_FEY:
-      details.traits = ["fey","tonval"];
+      details.traits = ["fey"];
       break;
     case SOURCES.SUMMON.SUMMON_ANIMAL:
-      details.traits = ["animal","tonval"];
+      details.traits = ["animal"];
       break;
     case SOURCES.SUMMON.SUMMON_CONSTRUCT:
-      details.traits = ["construct","tonval"];
+      details.traits = ["construct"];
       break;
     case SOURCES.SUMMON.SUMMON_LESSER_SERVITOR:
-      details.traits = ["celestial", "fiend", "monitor", "animal","tonval"];
+      details.traits = ["celestial", "fiend", "monitor", "animal"];
       if (rank > 4) details.rank = 4;
       break;
     case SOURCES.SUMMON.SUMMON_PLANT_OR_FUNGUS:
-      details.traits = ["plant", "fungus","tonval"];
+      details.traits = ["plant", "fungus"];
       break;
     case SOURCES.SUMMON.SUMMON_ELEMENTAL:
-      details.traits = ["elemental","tonval"];
+      details.traits = ["elemental"];
       break;
     case SOURCES.SUMMON.SUMMON_ENTITY:
-      details.traits = ["aberration","tonval"];
+      details.traits = ["aberration"];
       break;
     case SOURCES.SUMMON.SUMMON_FIEND:
-      details.traits = ["fiend","tonval"];
+      details.traits = ["fiend"];
       break;
     case SOURCES.SUMMON.SUMMON_GIANT:
-      details.traits = ["giant","tonval"];
+      details.traits = ["giant"];
       break;
     case SOURCES.SUMMON.SUMMON_MONITOR:
-      details.traits = ["monitor","tonval"];
+      details.traits = ["monitor"];
       break;
     case SOURCES.SUMMON.SUMMON_ROBOT:
-      details.traits = ["tech","tonval"];
+      details.traits = ["tech"];
       break;
     default:
       return null;
