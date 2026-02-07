@@ -231,47 +231,47 @@ export function getTraditionalSummonerSpellDetails(uuid, rank) {
   const details = { traits: [], rank };
   switch (uuid) {
     case SOURCES.SUMMON.SUMMON_DRAGON:
-      details.traits = ["dragon"];
+      details.traits = ["dragon","tonval"];
       break;
     case SOURCES.SUMMON.SUMMON_UNDEAD:
-      details.traits = ["undead"];
+      details.traits = ["undead","tonval"];
       break;
     case SOURCES.SUMMON.SUMMON_CELESTIAL:
-      details.traits = ["celestial"];
+      details.traits = ["celestial","tonval"];
       break;
     case SOURCES.SUMMON.SUMMON_FEY:
-      details.traits = ["fey"];
+      details.traits = ["fey","tonval"];
       break;
     case SOURCES.SUMMON.SUMMON_ANIMAL:
-      details.traits = ["animal"];
+      details.traits = ["animal","tonval"];
       break;
     case SOURCES.SUMMON.SUMMON_CONSTRUCT:
-      details.traits = ["construct"];
+      details.traits = ["construct","tonval"];
       break;
     case SOURCES.SUMMON.SUMMON_LESSER_SERVITOR:
-      details.traits = ["celestial", "fiend", "monitor", "animal"];
+      details.traits = ["celestial", "fiend", "monitor", "animal","tonval"];
       if (rank > 4) details.rank = 4;
       break;
     case SOURCES.SUMMON.SUMMON_PLANT_OR_FUNGUS:
-      details.traits = ["plant", "fungus"];
+      details.traits = ["plant", "fungus","tonval"];
       break;
     case SOURCES.SUMMON.SUMMON_ELEMENTAL:
-      details.traits = ["elemental"];
+      details.traits = ["elemental","tonval"];
       break;
     case SOURCES.SUMMON.SUMMON_ENTITY:
-      details.traits = ["aberration"];
+      details.traits = ["aberration","tonval"];
       break;
     case SOURCES.SUMMON.SUMMON_FIEND:
-      details.traits = ["fiend"];
+      details.traits = ["fiend","tonval"];
       break;
     case SOURCES.SUMMON.SUMMON_GIANT:
-      details.traits = ["giant"];
+      details.traits = ["giant","tonval"];
       break;
     case SOURCES.SUMMON.SUMMON_MONITOR:
-      details.traits = ["monitor"];
+      details.traits = ["monitor","tonval"];
       break;
     case SOURCES.SUMMON.SUMMON_ROBOT:
-      details.traits = ["tech"];
+      details.traits = ["tech","tonval"];
       break;
     default:
       return null;

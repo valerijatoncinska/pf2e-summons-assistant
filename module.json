@@ -1,6 +1,6 @@
 {
-  "id": "pf2e-summons-assistant",
-  "title": "PF2e Summons Assistant",
+  "id": "pf2e-summons-assistant-tonval-ru",
+  "title": "PF2e Summons Assistant [RU]",
   "description": "A module that supports summoning in PF2e out of the box, using Foundry Summons",
   "version": "#{VERSION}#",
   "library": "false",
