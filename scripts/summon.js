@@ -52,15 +52,14 @@ export async function summon(
         filter: (candidateActor) => {
           const isCommonAndValidLevel =
             candidateActor.system.traits.rarity === "common" &&
-            candidateActor.system.details.level.value <= summonLevel &&
-            candidateActor.system.traits.value.includes("TONVAL");
+            candidateActor.system.details.level.value <= summonLevel;
 
           const hasValidTraits =
-            requiredTraits.length === 0 ||
+            // requiredTraits.length === 0 ||
             candidateActor.system.traits.value.some((actorTrait) =>
               requiredTraits.some(
                 (requiredTrait) =>
-                  requiredTrait.toLowerCase() === actorTrait.toLowerCase(),
+                  requiredTrait.toLowerCase() === actorTrait.toLowerCase() && actorTrait.toLowerCase() === "tonval",
               ),
             );
 
