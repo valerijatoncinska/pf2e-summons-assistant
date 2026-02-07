@@ -1,6 +1,6 @@
 import { createThrallAttackInfo } from "./specificClasses/necromancer.js";
 
-export const MODULE_ID = "pf2e-summons-assistant";
+export const MODULE_ID = "vals-summons-for-pf2e";
 
 export const DEF_TOKEN_CONFIGS = {
   name: "",
