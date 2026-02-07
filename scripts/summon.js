@@ -55,13 +55,16 @@ export async function summon(
             candidateActor.system.details.level.value <= summonLevel;
 
           const hasValidTraits =
-            // requiredTraits.length === 0 ||
+            requiredTraits.length === 0 ||
             candidateActor.system.traits.value.some((actorTrait) =>
               requiredTraits.some(
                 (requiredTrait) =>
-                  requiredTrait.toLowerCase() === actorTrait.toLowerCase() && actorTrait.toLowerCase() === "tonval",
+                  requiredTrait.toLowerCase() === actorTrait.toLowerCase(),
               ),
             );
+          
+          const hasTonvalTrait = 
+            candidateActor.system.traits.value.includes("TONVAL");
 
           const hasValidUuid =
             allowedSpecificUuids.length > 0 &&
@@ -69,7 +72,7 @@ export async function summon(
 
           return allowedSpecificUuids.length > 0
             ? hasValidUuid
-            : isCommonAndValidLevel && hasValidTraits;
+            : isCommonAndValidLevel && hasValidTraits && hasTonvalTrait;
         },
         dropdowns: [
           {
