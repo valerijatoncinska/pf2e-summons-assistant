@@ -1,5 +1,5 @@
 {
-  "folder": "gGy6LNAsZa9IaIjf",
+  "folder": "mVjwgM2wn6PBRVzp",
   "name": "Dragon Turret",
   "type": "npc",
   "ownership": {
@@ -50,18 +50,15 @@
     "height": 2,
     "width": 2,
     "name": "Dragon Turret",
-    "displayName": 20,
+    "displayName": 30,
     "actorLink": false,
     "texture": {
       "src": "modules/pf2e-summons-assistant/assets/tokens/token/dragon-turret.webp",
       "anchorX": 0.5,
       "anchorY": 0.5,
-      "offsetX": 0,
-      "offsetY": 0,
       "fit": "contain",
       "scaleX": 2,
       "scaleY": 2,
-      "rotation": 0,
       "tint": "#ffffff",
       "alphaThreshold": 0.75
     },
@@ -112,7 +109,7 @@
       "saturation": 0,
       "contrast": 0
     },
-    "detectionModes": [],
+    "detectionModes": {},
     "occludable": {
       "radius": 0
     },
@@ -137,7 +134,8 @@
     "movementAction": null,
     "randomImg": false,
     "appendNumber": false,
-    "prependAdjective": false
+    "prependAdjective": false,
+    "depth": 2
   },
   "effects": [],
   "system": {
@@ -345,7 +343,7 @@
           "value": "free"
         },
         "description": {
-          "value": "<p><strong>Trigger </strong>This spell was cast or sustained.</p><hr /><p><strong>Effect </strong>The dragon unleashes its breath in a @Template[type:cone|distance:60], dealing @Damage[13d8[@item.flags.pf2e.rulesSelections.tradition]] damage (@Check[reflex|dc:resolve(@actor.flags.pf2e-summons-assistant.dc)|traits:concentrate,manipulate,@item.flags.pf2e.rulesSelections.tradition|basic:true]). The damage type depends on the tradition used to cast this spell: <strong>arcane</strong> force, <strong>divine</strong> spirit, <strong>occult</strong> mental, <strong>primal</strong> fire.</p>",
+          "value": "<p><strong>Trigger </strong>This spell was cast or sustained.</p><hr><p><strong>Effect </strong>The dragon unleashes its breath in a @Template[type:cone|distance:60], dealing @Damage[13d8[@item.flags.system.rulesSelections.tradition]] damage (@Check[reflex|dc:resolve(@actor.flags.pf2e-summons-assistant.dc)|traits:concentrate,manipulate,@item.flags.system.rulesSelections.tradition|basic:true]). The damage type depends on the tradition used to cast this spell: <strong>arcane</strong> force, <strong>divine</strong> spirit, <strong>occult</strong> mental, <strong>primal</strong> fire.</p>",
           "gm": ""
         },
         "publication": {
@@ -434,11 +432,11 @@
           "value": []
         },
         "_migration": {
-          "version": 0.954,
+          "version": 0.959,
           "previous": {
-            "schema": null,
-            "foundry": "13.351",
-            "system": "7.9.1"
+            "schema": 0.954,
+            "foundry": "14.361",
+            "system": "8.1.2"
           }
         },
         "actions": {
@@ -465,31 +463,31 @@
         "compendiumSource": null,
         "duplicateSource": null,
         "exportSource": null,
-        "coreVersion": "13.351",
+        "coreVersion": "14.361",
         "systemId": "pf2e",
-        "systemVersion": "7.9.1",
-        "createdTime": 1769672967140,
-        "modifiedTime": 1769758157765,
+        "systemVersion": "8.1.2",
+        "createdTime": 1778652689018,
+        "modifiedTime": 1778652689018,
         "lastModifiedBy": "vj8VUT8j7Wtzy3Y2"
       },
       "_key": "!actors.items!UGy4139EDrjbVDbv.Ew1xTR9eRg4UbDxE"
     }
   ],
-  "sort": 0,
+  "sort": -100000,
   "flags": {
     "pf2e": {
       "maxhealingRank": 0
     }
   },
   "_stats": {
-    "compendiumSource": null,
+    "compendiumSource": "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.UGy4139EDrjbVDbv",
     "duplicateSource": null,
     "exportSource": null,
-    "coreVersion": "13.351",
+    "coreVersion": "14.361",
     "systemId": "pf2e",
-    "systemVersion": "7.9.1",
-    "createdTime": 1769672628469,
-    "modifiedTime": 1769760182722,
+    "systemVersion": "8.1.2",
+    "createdTime": 1778652689017,
+    "modifiedTime": 1778772159559,
     "lastModifiedBy": "vj8VUT8j7Wtzy3Y2"
   },
   "_key": "!actors!UGy4139EDrjbVDbv"

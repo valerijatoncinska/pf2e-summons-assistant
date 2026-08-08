@@ -13,7 +13,7 @@
                 },
                 "scale-to-max-summon-level-for-rank": {
                     "name": "[房规] 召唤法术扩增至最高等级",
-                    "hint": "警告：我不会为该房规可能对您的游戏平衡性造成的影响负责。此功能使用PF2e Workbench的“等级扩增”代码，将通过传统召唤法术（如“召唤动物”等）召唤出的生物，扩增至该法术环阶可召唤的最高等级生物。"
+                    "hint": "警告：我不会为该房规可能对您的游戏平衡性造成的影响负责。此功能使用PF2e Workbench的“等级扩增”代码，将通过传统召唤法术（如“召唤动物”等）召唤出的生物，扩增至该法术环级可召唤的最高等级生物。"
                 }
             },
             "effect-ownership": {
@@ -43,6 +43,14 @@
                     "wooden-double": {
                         "name": "处理木制替身的伤害",
                         "hint": "当木制替身受到超过其最大生命值的伤害时，它将骰掷等同于溢出伤害的伤害（该伤害无伤害类型）"
+                    },
+                    "thaumaturge": {
+                        "name": "处理奇术师镜奇具",
+                        "hint": "特别处理奇术师的镜奇具特性"
+                    },
+                    "bilocation": {
+                        "name": "处理二重身法术",
+                        "hint": "为玩家角色处理二重身法术（例如：克隆+效果移除时删除克隆指示物）"
                     }
                 }
             },
@@ -52,6 +60,18 @@
                         "name": "[筛选] 默认仅显示带有立绘的指示物",
                         "hint": "使角色选择器默认仅显示拥有立绘的角色"
                     }
+                }
+            },
+            "reminder": {
+                "message": {
+                    "name": "[提醒] 接收参战者仆从的提醒信息",
+                    "hint": "允许在参战者的每回合开始时，接收其仆从的私人提醒信息"
+                }
+            },
+            "automation": {
+                "limit-range": {
+                    "hint": "限制了具备射程的召唤法术的召唤物生成范围，并将其范围显示在场景上",
+                    "name": "召唤物生成范围自动化限制"
                 }
             }
         },
@@ -75,7 +95,17 @@
             },
             "customization": {
                 "saved": "召唤物自定义设置已保存"
-            }
+            },
+            "active-minions": "<b>{summonerName}</b>当前控制的<u data-tooltip=\"{minionTooltip}\">仆从</u>",
+            "thaumaturge": {
+                "mirror-implement": {
+                    "error": "[错误] 你未在当前场景中激活自身镜像克隆"
+                }
+            },
+            "bilocation": {
+                "error": "[错误] 你未在当前场景中激活二重身克隆"
+            },
+            "illusory-creature": "[幻象生物] 选择你的幻象所呈现的生物形态与体型"
         },
         "dialog": {
             "duplicate-foe": "该目标豁免失败了吗？",
@@ -93,15 +123,91 @@
                 "summoned-token": {
                     "title": "自定义召唤物指示物"
                 }
+            },
+            "dancing-weapon": {
+                "choose": "选择该武器",
+                "title": "选择武器作为你的飞舞之刃",
+                "damage-types": "伤害类型"
+            },
+            "light": {
+                "title": "召唤光球",
+                "text": "你想召唤一个不附着生物的球形光亮吗？（如果选择否，则需要将效果应用至你想附加光亮的生物身上）"
+            },
+            "thaumaturge": {
+                "title": {
+                    "default": "选择要保留的自身镜像指示物",
+                    "unconscious": "你失去意识！选择要保留的自身镜像指示物",
+                    "adept-action": "你使自身镜像碎裂！选择不会碎裂的那个指示物"
+                },
+                "choose": "保留所选指示物"
+            },
+            "bilocation": {
+                "title": "选择要保留的二重身克隆指示物"
+            },
+            "summon": {
+                "sort": {
+                    "descending": "（降序）"
+                },
+                "filter": {
+                    "only-with-art": "附带美术资产"
+                }
+            },
+            "create-thrall": {
+                "title": "创造残骸",
+                "options": {
+                    "two": "{iconSummon}召唤了{cnt}个残骸",
+                    "one": "{iconSummon}召唤{cnt}个残骸并立即指挥残骸"
+                }
             }
         },
         "display-text": {
             "wooden-double": {
                 "step": "选择要“快步”至的位置",
-                "place-double": "左键点击以放置你的木制替身"
+                "place-double": "左键单击以放置你的木制替身"
             },
             "wall": {
                 "start-point": "选择你所创造墙体的起始点"
+            },
+            "jagged-berms": {
+                "berm": "放置城垛土堆",
+                "spikes": "左键单击放置尖刺木桩（{count}），右键单击以停止放置"
+            },
+            "prismatic-sphere": {
+                "red": {
+                    "title": "红色",
+                    "block": "摧毁穿过墙体的远程武器弹药（例如箭和弩矢）。",
+                    "text": "对任何穿过墙体的目标造成@Damage[20[fire]]伤害，需尝试一次@Check[reflex|dc:resolve(@actor.system.resources.dc.value)|basic]豁免。"
+                },
+                "orange": {
+                    "title": "橙色",
+                    "text": "对任何穿过墙体的目标造成@Damage[25[acid]]伤害，需尝试一次@Check[reflex|dc:resolve(@actor.system.resources.dc.value)|basic]豁免。",
+                    "block": "摧毁穿过墙体的投掷武器。"
+                },
+                "yellow": {
+                    "title": "黄色",
+                    "text": "对任何穿过墙体的目标造成@Damage[30[electricity]]伤害，需尝试一次@Check[reflex|dc:resolve(@actor.system.resources.dc.value)|basic]豁免。",
+                    "block": "阻挡穿过墙体的酸蚀，寒冷，电击，火焰，力场，音波，命能以及虚能效果。"
+                },
+                "green": {
+                    "title": "绿色",
+                    "text": "对任何穿过墙体的目标造成@Damage[10[poison]]伤害，需尝试一次@Check[fortitude|dc:resolve(@actor.system.resources.dc.value)|basic]豁免，并使豁免失败的目标陷入@UUID[Compendium.pf2e.conditionitems.Item.MIRkyAjyBeXivMa7]{力竭 Enfeebled 1}，持续1分钟。",
+                    "block": "阻挡穿过墙体的毒气，气体，以及吐息武器。"
+                },
+                "blue": {
+                    "title": "蓝色",
+                    "text": "穿过墙体的生物会承受@UUID[Compendium.pf2e.spells-srd.Item.znv4ECL7ZtuiagtA]的效果，需尝试一次@Check[fortitude|traits:earth|dc:resolve(@actor.system.resources.dc.value)]豁免",
+                    "block": "阻挡穿过墙体的听觉，石化，音波以及视觉效果。"
+                },
+                "indigo": {
+                    "title": "靛青",
+                    "text": "穿过墙体的生物会承受@UUID[Compendium.pf2e.spells-srd.Item.8kJbiBEjMWG4VUjs]的效果，需尝试一次@Check[will|traits:incapacitation,emotion,mental|dc:resolve(@actor.system.resources.dc.value)]豁免。",
+                    "block": "阻挡穿过墙体的预言系和心灵效果。"
+                },
+                "violet": {
+                    "title": "紫色",
+                    "block": "阻挡法术从球体外指定目标（区域效果如常穿过）。",
+                    "text": "穿过墙体的生物必须尝试一次@Check[will|dc:resolve(@actor.system.resources.dc.value)]豁免，否则陷入@UUID[Compendium.pf2e.conditionitems.Item.xYTAsEpcJE1Ccni3]{缓慢 Slowed 1}，持续1分钟；若大失败，该生物改为被如@UUID[Compendium.pf2e.spells-srd.Item.5bTt2CvYHPvaR7QQ]的效果送往其他位面"
+                }
             }
         },
         "items": {
@@ -129,8 +235,17 @@
                     }
                 },
                 "rule-elements": {
-                    "name": "效果：规则元素 Rule Elements",
+                    "name": "效果：规则元素",
                     "description": "该效果会为特定召唤物添加各类规则元素，以实现诸如打击等自动化操作。"
+                },
+                "dancing-blade": {
+                    "title": "效果：飞舞之刃 Dancing Blade"
+                },
+                "wondrous-figurine": {
+                    "duration": "效果：奇妙雕像 Wondrous Figurine",
+                    "bismuth-leopard": {
+                        "flash-aura": "效果：铋石花豹闪烁灵光 Bismuth Leopard Flash Aura"
+                    }
                 }
             }
         },
@@ -138,6 +253,17 @@
             "adjust-length": "调整长度",
             "rotate-wall": "旋转墙体",
             "scroll": "鼠标滚轮"
+        },
+        "code": {
+            "range": {
+                "feet": "尺"
+            }
+        },
+        "creature-name": {
+            "wondrous-figurine": {
+                "bismuth-leopard": "铋石花豹",
+                "jade-serpent": "翠玉蛇"
+            }
         }
     }
 }

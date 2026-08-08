@@ -109,7 +109,11 @@ async function customizeSummonedToken(tokenInfo, item) {
       <label for="imagePath">${game.i18n.localize("TOKEN.FIELDS.texture.src.label")}</label>
       <file-picker type="imagevideo" value="${defCFG.imagePath}" name="imagePath">
     </div>
-      <div class="form-group">
+    <div class="form-group">
+      <label for="doWildCard">${game.i18n.localize("TOKEN.FIELDS.randomImg.label")}</label>
+      <input type="checkbox" id="doWildCard" name="doWildCard" ${defCFG.doWildCard ? "checked" : ""} />
+    </div>
+    <div class="form-group">
       <label for="scale">${game.i18n.localize("Scale")}</label>
       <range-picker value="${defCFG.scale}" min="0.2" max="3" step="0.01" name="scale">
     </div>
@@ -137,7 +141,11 @@ async function customizeSummonedToken(tokenInfo, item) {
         </label>
         <range-picker value="${defCFG.subjectScaleCorrection}" min="0.5" max="3" step="0.01" name="subjectScaleCorrection">
       </div>
-    </fieldset
+    </fieldset>
+     <div class="form-group">
+      <label for="actorImg">${game.i18n.localize("DOCUMENT.Actor")} ${game.i18n.localize("DOCUMENT.FIELDS.img.label")}</label>
+      <input type="text" name="actorImg" value="${defCFG.actorImg}">
+    </div>
     `,
     ok: {
       label: "Save",
@@ -146,8 +154,7 @@ async function customizeSummonedToken(tokenInfo, item) {
   });
 
   console.log({ data, tokenInfo });
-  const isChangesMade =
-    data && Object.keys(defCFG).some((key) => defCFG?.[key] !== data?.[key]);
+  const isChangesMade = data && JSON.stringify(defCFG) !== JSON.stringify(data);
 
   if (isChangesMade) {
     // Set Customization setting
@@ -196,6 +203,9 @@ export function mapToActualModifications(cfg) {
   if (cfg.name) {
     updateData.name = cfg.name;
   }
+  if (cfg?.actorImg) {
+    updateData.img = cfg?.actorImg;
+  }
   updateData.prototypeToken = {
     ...(cfg?.name ? { name: cfg.name } : {}),
     texture: {
@@ -203,6 +213,7 @@ export function mapToActualModifications(cfg) {
       scaleX: cfg.scale,
       scaleY: cfg.scale,
     },
+    randomImg: !!cfg?.doWildCard,
     ring: {
       enabled: cfg.ringEnabled,
       subject: {

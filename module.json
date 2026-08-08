@@ -5,8 +5,8 @@
   "version": "#{VERSION}#",
   "library": "false",
   "compatibility": {
-    "minimum": 12,
-    "verified": 13
+    "minimum": 13,
+    "verified": 14
   },
   "authors": [
     {
@@ -19,7 +19,10 @@
       {
         "id": "pf2e",
         "type": "system",
-        "manifest": "https://github.com/foundryvtt/pf2e/releases/download/latest/system.json"
+        "manifest": "https://github.com/foundryvtt/pf2e/releases/download/latest/system.json",
+        "compatibility": {
+          "minimum": "8.4.0"
+        }
       },
       {
         "id": "sf2e",
@@ -44,6 +47,22 @@
         "id": "socketlib",
         "type": "module",
         "manifest": "https://raw.githubusercontent.com/manuelVo/foundryvtt-socketlib/master/module.json"
+      },
+      {
+        "id": "tcal",
+        "type": "module",
+        "manifest": "https://github.com/ddbrown30/tcal/releases/latest/download/module.json",
+        "compatibility": {
+          "minimum": "0.3.0"
+        }
+      },
+      {
+        "id": "sequencer",
+        "type": "module",
+        "manifest": "https://github.com/fantasycalendar/FoundryVTT-Sequencer/releases/latest/download/module.json",
+        "compatibility": {
+          "minimum": "3.0.0"
+        }
       }
     ],
     "recommends": [
@@ -54,10 +73,18 @@
         "reason": "This module makes it easier to track what summons you are sustaining",
         "manifest": "https://github.com/Lank891/Foundry-Pf2e-Sustain-Reminder/releases/latest/download/module.json",
         "compatibility": {}
+      },
+      {
+        "id": "pf2e-brewrata",
+        "name": "PF2e Brewrata",
+        "type": "module",
+        "reason": "For Necromancer to modify Boost Thrall"
       }
     ]
   },
-  "esmodules": ["scripts/module.js"],
+  "esmodules": [
+    "scripts/module.js"
+  ],
   "languages": [
     {
       "lang": "en",
@@ -83,7 +110,9 @@
   "url": "#{URL}#",
   "manifest": "#{MANIFEST}#",
   "download": "#{DOWNLOAD}#",
-  "styles": ["styles/module.css"],
+  "styles": [
+    "styles/module.css"
+  ],
   "license": "LICENSE",
   "readme": "README.md",
   "socket": true,
@@ -109,6 +138,28 @@
         "ASSISTANT": "OWNER"
       },
       "system": "pf2e"
+    },
+    {
+      "name": "sf2e-summons-assistant-actors",
+      "label": "SF2e Summons Assistant Actors",
+      "path": "packs/sf2e-summons-assistant-actors",
+      "type": "Actor",
+      "system": "sf2e",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    },
+    {
+      "name": "sf2e-summons-assistant-items",
+      "label": "SF2e Summons Assistant Items",
+      "path": "packs/sf2e-summons-assistant-items",
+      "type": "Item",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      },
+      "system": "sf2e"
     }
   ],
   "flags": {

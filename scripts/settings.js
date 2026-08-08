@@ -19,7 +19,7 @@ export function setupSettings() {
     default: true,
     type: Boolean,
   });
-  
+
   game.settings.register(MODULE_ID, "refresh.summons", {
     name: `${MODULE_ID}.module-settings.refresh.summons.name`,
     hint: `${MODULE_ID}.module-settings.refresh.summons.hint`,
@@ -30,6 +30,16 @@ export function setupSettings() {
     type: Boolean,
   });
 
+  game.settings.register(MODULE_ID, "reminder.message", {
+    name: `${MODULE_ID}.module-settings.reminder.message.name`,
+    hint: `${MODULE_ID}.module-settings.reminder.message.hint`,
+    requiresReload: false,
+    scope: "world",
+    config: true,
+    default: true,
+    type: Boolean,
+    requiresReload: true,
+  });
 
   game.settings.register(MODULE_ID, "filter.default.token-with-art", {
     name: `${MODULE_ID}.module-settings.filter.default.token-with-art.name`,
@@ -61,8 +71,18 @@ export function setupSettings() {
       config: true,
       default: false,
       type: Boolean,
-    }
+    },
   );
+
+  game.settings.register(MODULE_ID, "automation.limit-range", {
+    name: `${MODULE_ID}.module-settings.automation.limit-range.name`,
+    hint: `${MODULE_ID}.module-settings.automation.limit-range.hint`,
+    requiresReload: false,
+    scope: "world",
+    config: true,
+    default: true,
+    type: Boolean,
+  });
 
   game.settings.register(
     MODULE_ID,
@@ -75,12 +95,32 @@ export function setupSettings() {
       config: true,
       default: true,
       type: Boolean,
-    }
+    },
   );
 
   game.settings.register(MODULE_ID, "necromancer.thrall.auto-expire", {
     name: `${MODULE_ID}.module-settings.necromancer.thrall.auto-expire.name`,
     hint: `${MODULE_ID}.module-settings.necromancer.thrall.auto-expire.hint`,
+    requiresReload: true,
+    scope: "world",
+    config: true,
+    default: true,
+    type: Boolean,
+  });
+
+  game.settings.register(MODULE_ID, "specific-case.handle.bilocation", {
+    name: `${MODULE_ID}.module-settings.specific-case.handle.bilocation.name`,
+    hint: `${MODULE_ID}.module-settings.specific-case.handle.bilocation.hint`,
+    requiresReload: true,
+    scope: "world",
+    config: true,
+    default: true,
+    type: Boolean,
+  });
+
+  game.settings.register(MODULE_ID, "specific-case.handle.thaumaturge", {
+    name: `${MODULE_ID}.module-settings.specific-case.handle.thaumaturge.name`,
+    hint: `${MODULE_ID}.module-settings.specific-case.handle.thaumaturge.hint`,
     requiresReload: true,
     scope: "world",
     config: true,
@@ -108,7 +148,7 @@ export function setupSettings() {
     type: Object,
   });
 
-    game.settings.register(MODULE_ID, "customized-summons", {
+  game.settings.register(MODULE_ID, "customized-summons", {
     name: `${MODULE_ID}.module-settings.customized-summons.name`,
     hint: `${MODULE_ID}.module-settings.customized-summons.hint`,
     requiresReload: true,

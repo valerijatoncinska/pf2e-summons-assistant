@@ -4,6 +4,7 @@ import {
   CREATURES,
   EFFECTS,
   RULE_ELEMENTS,
+  SIZES,
   SOURCES,
 } from "./const.js";
 import { getFoeInfo } from "./specificCases/duplicateFoe.js";
@@ -11,6 +12,7 @@ import {
   errorNotification,
   getAvengingWildwoodStrikeRuleElements,
   getGridUnitsFromFeet,
+  getHeightenedValue,
   hasAnyJB2A,
   hasNoTargets,
   onlyHasJB2AFree,
@@ -18,7 +20,11 @@ import {
 import { incarnateDetails } from "./specificCases/incarnate.js";
 import { getEidolon } from "./specificClasses/summoner.js";
 import { isSummonSourceDisabled } from "./disableItems.js";
-import { getNecromancerProf } from "./specificClasses/necromancer.js";
+import {
+  dancingWeaponDialog,
+  getJB2aPath,
+} from "./specificCases/dancingWeapon.js";
+import { getBaseThrallArtConfig } from "./specificClasses/necromancer.js";
 
 export async function getSpecificSummonDetails(
   uuid,
@@ -31,6 +37,7 @@ export async function getSpecificSummonDetails(
     targetTokenUUID: null,
     tokenWidth: 1,
     tokenHeight: 1,
+    ignoreDialogue: false,
   },
 ) {
   if (isSummonSourceDisabled(uuid)) {
@@ -71,22 +78,46 @@ const getSummonHandlers = () => ({
 
   // Misc
   [SOURCES.MISC.AVENGING_WILDWOOD]: handlers.misc.handleAvengingWildwood,
+  [SOURCES.MISC.BILOCATION]: handlers.misc.handleBilocation,
   [SOURCES.MISC.CALL_URSINE_ALLY]: handlers.misc.handleCallUrsineAlly,
   [SOURCES.MISC.DRAGON_TURRET]: handlers.misc.handleDragonTurret,
   [SOURCES.MISC.DUPLICATE_FOE]: handlers.misc.handleDuplicateFoe,
   [SOURCES.MISC.FLOATING_FLAME]: handlers.misc.handleFloatingFlame,
+  [SOURCES.MISC.HEALING_WELL]: handlers.misc.handleHealingWell,
   [SOURCES.MISC.LIGHT]: handlers.misc.handleLight,
+  [SOURCES.MISC.ILLUSORY_CREATURE]: handlers.misc.handleIllusoryCreature,
+  [SOURCES.MISC.INSTANT_MINEFIELD]: handlers.misc.handleInstantMinefield,
   [SOURCES.MISC.PROTECTOR_TREE]: handlers.misc.handleProtectorTree,
+  [SOURCES.MISC.RAISE_THE_HORDE]: handlers.misc.handleNecrologistsHorde,
   [SOURCES.MISC.SHADOW_SELF]: handlers.misc.handleShadowSelf,
+  [SOURCES.MISC.SWARM_FORTH]: handlers.misc.handleSwarmkeepersSwarm,
   [SOURCES.MISC.TELEKINETIC_HAND]: handlers.misc.handleTelekineticHand,
   [SOURCES.MISC.WOODEN_DOUBLE]: handlers.misc.handleWoodenDouble,
 
+  // Creature Abilities
+  [SOURCES.CREATURE_ABILITY.SHADOW_DOUBLES]:
+    handlers.creatureAbility.handleShadowDouble,
+
+  // Mundane
+  [SOURCES.MUNDANE.CANDLE]: handlers.mundane.candle,
+  [SOURCES.MUNDANE.LANTERN_BULLSEYE]: handlers.mundane.lanternBullseye,
+  [SOURCES.MUNDANE.LANTERN_HOODED]: handlers.mundane.lanternHooded,
+  [SOURCES.MUNDANE.TORCH]: handlers.mundane.torch,
+
   // Walls
+  [SOURCES.WALL.PRISMATIC_SPHERE]: handlers.wall.handlePrismaticSphere,
+  [SOURCES.WALL.PRISMATIC_WALL]: handlers.wall.handlePrismaticWall,
+  [SOURCES.WALL.WALL_OF_ICE]: handlers.wall.handleWallOfIce,
   [SOURCES.WALL.WALL_OF_FIRE]: handlers.wall.handleWallOfFire,
+  [SOURCES.WALL.WALL_OF_STONE]: handlers.wall.handleWallOfStone,
+  [SOURCES.WALL.WALL_OF_SHADOW]: handlers.wall.handleWallOfShadow,
+  [SOURCES.WALL.WALL_OF_THORNS]: handlers.wall.handleWallOfThorns,
 
   // Necromancer
   [SOURCES.NECROMANCER.BIND_HEROIC_SPIRIT_STRIKE]:
     handlers.necromancer.handleBindHeroicSpiritStrike,
+  [SOURCES.NECROMANCER.BLOODY_TENDRILS]:
+    handlers.necromancer.handleBloodyTendrils,
   [SOURCES.NECROMANCER.CONGLOMERATE_OF_LIMBS]:
     handlers.necromancer.handleConglomerateOfLimbs,
   [SOURCES.NECROMANCER.CREATE_THRALL]: handlers.necromancer.handleCreateThrall,
@@ -101,13 +132,21 @@ const getSummonHandlers = () => ({
   [SOURCES.NECROMANCER.SKELETAL_LANCERS]:
     handlers.necromancer.handleSkeletalLancers,
 
+  // Psychic
+  [SOURCES.PSYCHIC.DANCING_BLADE]: handlers.psychic.handleDancingBlade,
+
   // Summon
-  [SOURCES.SUMMON.PHANTASMAL_MINION]: handlers.summon.handlePhantasmalMinion,
+  [SOURCES.MISC.PHANTASMAL_MINION]: handlers.summon.handlePhantasmalMinion,
 
   // Summoner
   [SOURCES.SUMMONER.MANIFEST_EIDOLON]: handlers.summoner.handleManifestEidolon,
 
+  [SOURCES.THAUMATURGE.MIRRORS_REFLECTION]:
+    handlers.thaumaturge.handleMirrorsReflection,
+
   // Wondrous Figurine
+  [SOURCES.WONDROUS_FIGURINE.BISMUTH_LEOPARDS]:
+    handlers.wondrousFigurine.handleBismuthLeopards,
   [SOURCES.WONDROUS_FIGURINE.JADE_SERPENT]:
     handlers.wondrousFigurine.handleJadeSerpent,
 });
@@ -118,6 +157,7 @@ const handlers = {
       return [
         {
           specific_uuids: [CREATURES.COMMANDER.PLANTED_BANNER],
+          noDefaultTraits: true,
           modifications: {
             "system.details.level.value": data.summonerLevel,
             "system.abilities.int.mod": data.int,
@@ -135,41 +175,53 @@ const handlers = {
   incarnate: {
     handleCallFluxwraith: (data) => {
       return [
-        incarnateDetails({
-          uuids: [CREATURES.FLUXWRAITH],
-          rank: data.rank,
-          dc: data.dc,
-        }),
+        {
+          ...incarnateDetails({
+            uuids: [CREATURES.FLUXWRAITH],
+            rank: data.rank,
+            dc: data.dc,
+          }),
+          noDefaultTraits: true,
+        },
       ];
     },
 
     handleSummonElementalHerald: (data) => {
       return [
-        incarnateDetails({
-          uuids: Object.values(CREATURES.ELEMENTAL_HERALD),
-          rank: data.rank,
-          dc: data.dc,
-        }),
+        {
+          ...incarnateDetails({
+            uuids: Object.values(CREATURES.ELEMENTAL_HERALD),
+            rank: data.rank,
+            dc: data.dc,
+          }),
+          noDefaultTraits: true,
+        },
       ];
     },
 
     handleSummonHealingServitor: (data) => {
       return [
-        incarnateDetails({
-          uuids: [CREATURES.HEALING_SERVITOR],
-          rank: data.rank,
-          dc: data.dc,
-        }),
+        {
+          ...incarnateDetails({
+            uuids: [CREATURES.HEALING_SERVITOR],
+            rank: data.rank,
+            dc: data.dc,
+          }),
+          noDefaultTraits: true,
+        },
       ];
     },
 
     handleTempestOfShades: (data) => {
       return [
-        incarnateDetails({
-          uuids: [CREATURES.TEMPEST_OF_SHADES],
-          rank: data.rank,
-          dc: data.dc,
-        }),
+        {
+          ...incarnateDetails({
+            uuids: [CREATURES.TEMPEST_OF_SHADES],
+            rank: data.rank,
+            dc: data.dc,
+          }),
+          noDefaultTraits: true,
+        },
       ];
     },
   },
@@ -179,6 +231,7 @@ const handlers = {
       return [
         {
           specific_uuids: [CREATURES.PROTECTOR_TREE],
+          noDefaultTraits: true,
           modifications: {
             "system.attributes.hp.max":
               10 + (Math.round(data.summonerLevel / 2) - 1) * 10,
@@ -200,6 +253,7 @@ const handlers = {
       return [
         {
           specific_uuids: [CREATURES.KINETICIST.JAGGED_BERMS],
+          noDefaultTraits: true,
           amount: 6,
           modifications: {
             "system.attributes.hp.max":
@@ -231,6 +285,7 @@ const handlers = {
       return [
         {
           specific_uuids: [CREATURES.MECHANIC.MINE],
+          noDefaultTraits: true,
           rank: data.rank,
           modifications: {
             "system.details.level.value": data.summonerLevel,
@@ -248,6 +303,7 @@ const handlers = {
       return [
         {
           specific_uuids: [CREATURES.MECHANIC.MINE],
+          noDefaultTraits: true,
           rank: data.rank,
           amount: 2,
           modifications: {
@@ -268,6 +324,7 @@ const handlers = {
       return [
         {
           specific_uuids: [CREATURES.AVENGING_WILDWOOD],
+          noDefaultTraits: true,
           modifications: {
             "system.attributes.hp.max": 20 + (data.rank - 2) * 10,
             "system.attributes.hp.value": 20 + (data.rank - 2) * 10,
@@ -281,6 +338,27 @@ const handlers = {
               getAvengingWildwoodStrikeRuleElements({ rank: data.rank }),
             ),
           ],
+        },
+      ];
+    },
+    handleBilocation: async (data) => {
+      const actor = game.actors.get(data.summonerActorId);
+      const effect = EFFECTS.BILOCATION;
+      return [
+        {
+          specific_uuids: [actor.uuid],
+          noDefaultTraits: true,
+          isCharacter: true,
+          itemsToAdd: [effect],
+          crosshairParameters: {
+            location: {
+              obj: data.position,
+              limitMaxRange: getGridUnitsFromFeet(5),
+              displayRangePoly: true,
+              rangePolyLineColor: 0x0,
+              rangePolyFillColor: 0x0,
+            },
+          },
         },
       ];
     },
@@ -308,12 +386,14 @@ const handlers = {
         }
 
         const info = await getFoeInfo(token, data.rank);
-        const isFail = await foundry.applications.api.DialogV2.confirm({
-          content: game.i18n.localize(
-            "pf2e-summons-assistant.dialog.duplicate-foe",
-          ),
-          rejectClose: false,
-        });
+        const isFail = data.ignoreDialogue
+          ? true
+          : await foundry.applications.api.DialogV2.confirm({
+              content: game.i18n.localize(
+                "pf2e-summons-assistant.dialog.duplicate-foe",
+              ),
+              rejectClose: false,
+            });
         const effect = EFFECTS.DUPLICATE_FOE(isFail);
         effect.system.rules.push(...info.strikeRules);
         return [
@@ -335,6 +415,7 @@ const handlers = {
       return [
         {
           specific_uuids: [CREATURES.DRAGON_TURRET],
+          noDefaultTraits: true,
           itemsToAdd: [EFFECTS.RULE_EFFECT([RULE_ELEMENTS.SPELL_DC_FLAG])],
           ...(data.itemRollOptions.length > 0
             ? {
@@ -357,6 +438,7 @@ const handlers = {
       return [
         {
           specific_uuids: [CREATURES.FLOATING_FLAME],
+          noDefaultTraits: true,
           rank: data.rank,
           modifications: {
             "system.details.level.value": data.rank,
@@ -373,11 +455,56 @@ const handlers = {
       ];
     },
 
+    handleHealingWell: async (data) => {
+      return [
+        {
+          specific_uuids: [CREATURES.HEALING_WELL],
+          noDefaultTraits: true,
+          rank: data.rank,
+          modifications: {
+            "system.details.level.value": data.rank,
+          },
+        },
+      ];
+    },
+
+    handleInstantMinefield: async (data) => {
+      return [
+        {
+          specific_uuids: [CREATURES.INSTANT_MINEFIELD_MINE],
+          noDefaultTraits: true,
+          amount: 6,
+          rank: data.rank,
+          modifications: {
+            "system.details.level.value": data.rank,
+            "system.skills.stealth.value": data.dc,
+            "system.attributes.classDC.value": data.dc,
+            hidden: game.user.isGM,
+          },
+        },
+      ];
+    },
     handleLight: async (data) => {
-      if (hasNoTargets()) {
+      let doSummon = true;
+      if (!data.ignoreDialogue && hasNoTargets()) {
+        doSummon = await foundry.applications.api.DialogV2.confirm({
+          window: {
+            title: game.i18n.localize(
+              "pf2e-summons-assistant.dialog.light.title",
+            ),
+          },
+          content: game.i18n.localize(
+            "pf2e-summons-assistant.dialog.light.text",
+          ),
+          rejectClose: true,
+          modal: true,
+        });
+      }
+      if ((hasNoTargets() || data.ignoreDialogue) && doSummon) {
         return [
           {
             specific_uuids: Object.values(CREATURES.LIGHT),
+            noDefaultTraits: true,
             rank: data.rank,
             modifications: {
               "system.details.level.value": data.rank,
@@ -393,14 +520,171 @@ const handlers = {
       }
       return null;
     },
-
+    handleIllusoryCreature: async (data) => {
+      const maxSizeNumber = Math.min(data.rank + 1, SIZES.length);
+      ui.notifications.info(
+        game.i18n.localize(
+          "pf2e-summons-assistant.notification.illusory-creature",
+        ),
+      );
+      const actorUUID = data?.ignoreDialogue
+        ? CREATURES.ILLUSORY_CREATURE
+        : await foundrySummons.SummonMenu.start({
+            noSummon: true,
+            filter: (candidateActor) =>
+              !candidateActor?.img?.endsWith("default-icons/npc.svg"),
+            dropdowns: [
+              {
+                id: "sortOrder",
+                name: game.i18n.localize("DOCUMENT.FIELDS.sort.label"),
+                options: [
+                  {
+                    label: game.i18n.localize("PF2E.CharacterLevelLabel"),
+                    value: 1,
+                  },
+                  {
+                    label: `${game.i18n.localize("PF2E.CharacterLevelLabel")} ${game.i18n.localize("pf2e-summons-assistant.dialog.summon.sort.descending")}`,
+                    value: 0,
+                  },
+                ],
+                sort: (actorA, actorB, sortIndex) => {
+                  const aLevel = actorA.system.details.level.value;
+                  const bLevel = actorB.system.details.level.value;
+                  if (aLevel === bLevel) {
+                    return actorA.name.localeCompare(actorB.name);
+                  } else {
+                    return sortIndex === 0 ? bLevel - aLevel : aLevel - bLevel;
+                  }
+                },
+              },
+              {
+                id: "traitsFilter",
+                name: game.i18n.localize("PF2E.Traits"),
+                options: [
+                  { label: "", value: "" },
+                  ...[
+                    "dragon",
+                    "undead",
+                    "celestial",
+                    "fey",
+                    "animal",
+                    "construct",
+                    "celestial",
+                    "plant",
+                    "fungus",
+                    "elemental",
+                    "aberration",
+                    "fiend",
+                  ]
+                    .toSorted()
+                    .map((traitName) => ({
+                      label: game.i18n.localize(
+                        `PF2E.Trait${traitName[0].toUpperCase()}${traitName.slice(1)}`,
+                      ),
+                      value: traitName,
+                    })),
+                ],
+                func: (filterActor, selectedTrait) => {
+                  return (
+                    !selectedTrait ||
+                    filterActor.system.traits.value.some(
+                      (actorTrait) =>
+                        selectedTrait.toLowerCase() ===
+                        actorTrait.toLowerCase(),
+                    )
+                  );
+                },
+              },
+            ],
+            toggles: [
+              {
+                id: "proper-size",
+                name: "Proper Size",
+                default: true,
+                func: (toggleActor, isToggleActive) => {
+                  return (
+                    isToggleActive ||
+                    SIZES?.[toggleActor?.system?.traits?.size?.value] <=
+                      maxSizeNumber
+                  );
+                },
+                indexedFields: [
+                  "system.traits?.size.value",
+                  "system.details.level.value",
+                  "system.traits.value",
+                  "img",
+                ],
+              },
+            ],
+          });
+      const actor = await fromUuid(actorUUID);
+      const texture = actor?.prototypeToken.ring.enabled
+        ? actor?.prototypeToken?.ring?.subject?.texture ||
+          actor?.prototypeToken?.texture?.src
+        : actor?.prototypeToken?.texture?.src;
+      return [
+        {
+          specific_uuids: [CREATURES.ILLUSORY_CREATURE],
+          modifications: {
+            "system.details.level.value": data.rank,
+            "system.traits.size.value": actor?.system?.traits?.size?.value,
+            img: actor?.img,
+            prototypeToken: {
+              "texture.src": actor?.prototypeToken?.texture?.src,
+              alpha: actor?.prototypeToken?.alpha,
+              ring: {
+                enabled: actor?.prototypeToken?.ring?.enabled,
+                subject: {
+                  texture: actor?.prototypeToken?.ring?.subject?.texture,
+                  scale: actor?.prototypeToken?.ring?.subject?.scale,
+                },
+              },
+            },
+          },
+          tokenModifications: {
+            "flags.pf2e.autoscale": false,
+          },
+          crosshairParameters: {
+            texture: texture,
+            distance: (actor?.prototypeToken.height * canvas.grid.distance) / 2,
+          },
+          itemsToAdd: [EFFECTS.RULE_EFFECT([RULE_ELEMENTS.SPELL_DC_FLAG])],
+        },
+      ];
+    },
+    handleNecrologistsHorde: async (data) => {
+      const summonerActor = game.actors.get(data.summonerActorId);
+      return [
+        {
+          specific_uuids: [CREATURES.NECROLOGISTS_HORDE],
+          noDefaultTraits: true,
+          rank: data.summonerLevel,
+          modifications: {
+            "system.details.level.value": data.summonerLevel,
+            "system.attributes.ac.value":
+              summonerActor?.system?.attributes?.ac?.value,
+            "system.saves.fortitude.value":
+              summonerActor?.system?.saves?.fortitude?.value,
+            "system.saves.reflex.value":
+              summonerActor?.system?.saves?.reflex?.value,
+            "system.saves.will.value":
+              summonerActor?.system?.saves?.will?.value,
+            "system.perception.value": summonerActor?.system?.perception?.value,
+          },
+          crosshairParameters: {
+            distance: canvas.grid.distance * 1.5,
+          },
+        },
+      ];
+    },
     handleShadowSelf: (data) => {
       const token = canvas.tokens.placeables.find(
-        (t) => t.actor.id === data.summonerActorId,
+        (t) => t?.actor?.id === data.summonerActorId,
       )?.document;
       return [
         {
           specific_uuids: [CREATURES.SHADOW_SELF],
+          noDefaultTraits: true,
           modifications: {
             img: token.actor.img,
             prototypeToken: {
@@ -422,13 +706,44 @@ const handlers = {
       ];
     },
 
+    handleSwarmkeepersSwarm: async (data) => {
+      const summonerActor = game.actors.get(data.summonerActorId);
+      return [
+        {
+          specific_uuids: [CREATURES.SWARMKEEPER_SWARM],
+          noDefaultTraits: true,
+          rank: data.summonerLevel,
+          modifications: {
+            "system.details.level.value": data.summonerLevel,
+            "system.attributes.ac.value":
+              summonerActor?.system?.attributes?.ac?.value,
+            "system.saves.fortitude.value":
+              summonerActor?.system?.saves?.fortitude?.value,
+            "system.saves.reflex.value":
+              summonerActor?.system?.saves?.reflex?.value,
+            "system.saves.will.value":
+              summonerActor?.system?.saves?.will?.value,
+            "system.perception.value": summonerActor?.system?.perception?.value,
+          },
+          crosshairParameters: {
+            distance: canvas.grid.distance,
+            snap: {
+              position: CONST.GRID_SNAPPING_MODES.VERTEX,
+            },
+          },
+        },
+      ];
+    },
+
     handleTelekineticHand: async (data) => {
-      const isInvisible = await foundry.applications.api.DialogV2.confirm({
-        content: game.i18n.localize(
-          "pf2e-summons-assistant.dialog.telekinetic-hand",
-        ),
-        rejectClose: false,
-      });
+      const isInvisible = data.ignoreDialogue
+        ? false
+        : await foundry.applications.api.DialogV2.confirm({
+            content: game.i18n.localize(
+              "pf2e-summons-assistant.dialog.telekinetic-hand",
+            ),
+            rejectClose: false,
+          });
       const itemsToAdd = [];
       if (isInvisible) {
         const invisible = await fromUuid(EFFECTS.CONDITIONS.INVISIBLE);
@@ -437,6 +752,7 @@ const handlers = {
       return [
         {
           specific_uuids: [CREATURES.TELEKINETIC_HAND],
+          noDefaultTraits: true,
           rank: data.rank,
           modifications: {
             ...(onlyHasJB2AFree()
@@ -456,6 +772,7 @@ const handlers = {
       return [
         {
           specific_uuids: [CREATURES.WOODEN_DOUBLE],
+          noDefaultTraits: true,
           modifications: {
             "system.details.level.value": data.rank,
             "system.attributes.hp.max": 20 + (data.rank - 3) * 10,
@@ -493,6 +810,7 @@ const handlers = {
       return [
         {
           specific_uuids: [CREATURES.PROTECTOR_TREE],
+          noDefaultTraits: true,
           modifications: {
             "system.attributes.hp.max": 10 + (data.rank - 1) * 10,
             "system.attributes.hp.value": 10 + (data.rank - 1) * 10,
@@ -509,37 +827,195 @@ const handlers = {
       ];
     },
   },
-
+  creatureAbility: {
+    handleShadowDouble: async (_data) => {
+      return [
+        {
+          specific_uuids: [CREATURES.OZTHOOM_SHADOW_DOUBLE],
+          noDefaultTraits: true,
+          amount: 3,
+        },
+      ];
+    },
+  },
+  mundane: {
+    candle: async (_data) => {
+      return [
+        {
+          specific_uuids: [CREATURES.MUNDANE.CANDLE],
+          noDefaultTraits: true,
+        },
+      ];
+    },
+    lanternBullseye: async (_data) => {
+      return [
+        {
+          specific_uuids: [CREATURES.MUNDANE.LANTERN_BULLSEYE],
+          noDefaultTraits: true,
+        },
+      ];
+    },
+    lanternHooded: async (_data) => {
+      return [
+        {
+          specific_uuids: [CREATURES.MUNDANE.LANTERN_HOODED],
+          noDefaultTraits: true,
+        },
+      ];
+    },
+    torch: async (_data) => {
+      return [
+        {
+          specific_uuids: [CREATURES.MUNDANE.TORCH],
+          noDefaultTraits: true,
+        },
+      ];
+    },
+  },
   wall: {
+    handlePrismaticSphere: (data) => {
+      const token = canvas.tokens.placeables.find(
+        (t) => t?.actor?.id === data.summonerActorId,
+      );
+
+      return [
+        {
+          specific_uuids: [CREATURES.PRISMATIC_SPHERE],
+          noDefaultTraits: true,
+          modifications: {
+            level: data.rank,
+            "system.resources.dc.value": data.dc,
+          },
+          crosshairParameters: {
+            distance: getGridUnitsFromFeet(10),
+            location: {
+              obj: token,
+              limitMaxRange:
+                (canvas.grid.distance * token.document.width + 1) / 2,
+            },
+            snap: {
+              position: CONST.GRID_SNAPPING_MODES.VERTEX,
+            },
+          },
+        },
+      ];
+    },
+    handlePrismaticWall: (data) => {
+      return [
+        {
+          specific_uuids: [CREATURES.PRISMATIC_WALL],
+          noDefaultTraits: true,
+          modifications: {
+            level: data.rank,
+            "system.resources.dc.value": data.dc,
+          },
+          crosshairParameters: {
+            snap: {
+              position:
+                CONST.GRID_SNAPPING_MODES.VERTEX |
+                CONST.GRID_SNAPPING_MODES.CENTER,
+            },
+            label: {
+              text: game.i18n.localize(
+                "pf2e-summons-assistant.display-text.wall.start-point",
+              ),
+            },
+          },
+        },
+      ];
+    },
+    handleWallOfIce: async (data) => {
+      const type = data.ignoreDialogue
+        ? "line"
+        : await foundry.applications.api.DialogV2.wait({
+            window: { title: "Wall of Ice" },
+            content: await TextEditor.enrichHTML(
+              `<p>${game.i18n.localize("pf2e-summons-assistant.dialog.choose-type-of")} @UUID[${SOURCES.WALL.WALL_OF_ICE}]</p>`,
+            ),
+            // This example does not use i18n strings for the button labels,
+            // but they are automatically localized.
+            buttons: [
+              {
+                label: "Circle",
+                action: "circle",
+                icon: "fa-regular fa-circle",
+              },
+              {
+                label: "Line",
+                action: "line",
+                icon: "fa-solid fa-direction-up-down",
+              },
+            ],
+          });
+
+      return [
+        {
+          specific_uuids: [CREATURES.WALL_OF_ICE],
+          noDefaultTraits: true,
+          rank: data.rank,
+          modifications: {
+            "system.details.level.value": data.rank,
+            "system.details.blurb": type,
+            "system.attributes.hp.max":
+              40 + Math.floor((data.rank - 5) / 2) * 10,
+            "system.attributes.hp.value":
+              40 + Math.floor((data.rank - 5) / 2) * 10,
+          },
+          ...(type === "circle"
+            ? {
+                crosshairParameters: {
+                  distance: 10.5,
+                  snap: {
+                    position:
+                      CONST.GRID_SNAPPING_MODES.VERTEX |
+                      CONST.GRID_SNAPPING_MODES.CENTER,
+                  },
+                },
+              }
+            : {
+                crosshairParameters: {
+                  label: {
+                    text: game.i18n.localize(
+                      "pf2e-summons-assistant.display-text.wall.start-point",
+                    ),
+                  },
+                },
+              }),
+        },
+      ];
+    },
     handleWallOfFire: async (data) => {
       if (!hasAnyJB2A()) {
         return null;
       }
 
-      const type = await foundry.applications.api.DialogV2.wait({
-        window: { title: "Wall of Fire" },
-        content: await TextEditor.enrichHTML(
-          `<p>${game.i18n.localize("pf2e-summons-assistant.dialog.choose-type-of")} @UUID[${SOURCES.WALL.WALL_OF_FIRE}]</p>`,
-        ),
-        // This example does not use i18n strings for the button labels,
-        // but they are automatically localized.
-        buttons: [
-          {
-            label: "Circle",
-            action: "circle",
-            icon: "fa-regular fa-circle",
-          },
-          {
-            label: "Line",
-            action: "line",
-            icon: "fa-solid fa-direction-up-down",
-          },
-        ],
-      });
+      const type = data.ignoreDialogue
+        ? "line"
+        : await foundry.applications.api.DialogV2.wait({
+            window: { title: "Wall of Fire" },
+            content: await TextEditor.enrichHTML(
+              `<p>${game.i18n.localize("pf2e-summons-assistant.dialog.choose-type-of")} @UUID[${SOURCES.WALL.WALL_OF_FIRE}]</p>`,
+            ),
+            // This example does not use i18n strings for the button labels,
+            // but they are automatically localized.
+            buttons: [
+              {
+                label: "Circle",
+                action: "circle",
+                icon: "fa-regular fa-circle",
+              },
+              {
+                label: "Line",
+                action: "line",
+                icon: "fa-solid fa-direction-up-down",
+              },
+            ],
+          });
 
       return [
         {
           specific_uuids: [CREATURES.WALL_OF_FIRE],
+          noDefaultTraits: true,
           rank: data.rank,
           modifications: {
             "system.details.level.value": data.rank,
@@ -568,15 +1044,122 @@ const handlers = {
         },
       ];
     },
+    handleWallOfStone: async (data) => {
+      const max = 120;
+      return [
+        {
+          specific_uuids: [CREATURES.WALL_OF_STONE],
+          noDefaultTraits: true,
+          rank: data.rank,
+          amount: max / 5,
+          modifications: {
+            "system.details.level.value": data.rank,
+          },
+          crosshairParameters: ({ cnt, prevSummonedToken }) => ({
+            snap: {
+              position: CONST.GRID_SNAPPING_MODES.EDGE_MIDPOINT,
+              direction: 90,
+            },
+            label: {
+              text: `${max - cnt * 5} / ${max} ft,`,
+            },
+            ...(prevSummonedToken
+              ? {
+                  location: {
+                    obj: prevSummonedToken,
+                    limitMaxRange: 5,
+                  },
+                }
+              : {}),
+          }),
+        },
+      ];
+    },
+    handleWallOfShadow: async (data) => {
+      return [
+        {
+          specific_uuids: [CREATURES.WALL_OF_SHADOW],
+          noDefaultTraits: true,
+          rank: data.rank,
+          modifications: {
+            "system.details.level.value": data.rank,
+          },
+          crosshairParameters: {
+            label: {
+              text: game.i18n.localize(
+                "pf2e-summons-assistant.display-text.wall.start-point",
+              ),
+            },
+          },
+        },
+      ];
+    },
+    handleWallOfThorns: async (data) => {
+      return [
+        {
+          specific_uuids: [CREATURES.WALL_OF_THORNS],
+          noDefaultTraits: true,
+          rank: data.rank,
+          modifications: {
+            "system.details.level.value": data.rank,
+            "system.attributes.hp.max": 20 + (data.rank - 3) * 5,
+            "system.attributes.hp.value": 20 + (data.rank - 3) * 5,
+          },
+          crosshairParameters: {
+            label: {
+              text: game.i18n.localize(
+                "pf2e-summons-assistant.display-text.wall.start-point",
+              ),
+            },
+          },
+        },
+      ];
+    },
   },
-
   necromancer: {
     handleBindHeroicSpiritStrike: (data) => {
       return [
         {
           specific_uuids: [CREATURES.NECROMANCER.THRALL],
+          noDefaultTraits: true,
+          modifications: {
+            ...getBaseThrallArtConfig(data.summonerRollOptions),
+          },
           rank: 1,
-          itemsToAdd: [EFFECTS.NECROMANCER.THRALL_EXPIRATION(data.duration)],
+          itemsToAdd: [
+            EFFECTS.NECROMANCER.THRALL_EXPIRATION(data.duration, {
+              uuid: SOURCES.NECROMANCER.CREATE_THRALL,
+              necromancerLevel: data.summonerLevel,
+              rollOptions: data.summonerRollOptions,
+            }),
+          ],
+        },
+      ];
+    },
+    handleBloodyTendrils: (data) => {
+      return [
+        {
+          specific_uuids: [CREATURES.NECROMANCER.BLOODY_TENDRIL],
+          noDefaultTraits: true,
+          amount: getHeightenedValue({
+            baseVal: 3,
+            startLvl: 3,
+            currLvl: data.rank,
+            heightenEvery: 3,
+            heightenBonus: 1,
+          }),
+          rank: data.rank,
+          itemsToAdd: [
+            EFFECTS.NECROMANCER.THRALL_EXPIRATION(data.duration, {
+              uuid: SOURCES.NECROMANCER.BLOODY_TENDRILS,
+              necromancerLevel: data.summonerLevel,
+              rollOptions: data.summonerRollOptions,
+            }),
+            EFFECTS.RULE_EFFECT([
+              RULE_ELEMENTS.SPELL_DC_FLAG,
+              RULE_ELEMENTS.SPELL_RANK_FLAG(data.rank),
+            ]),
+          ],
         },
       ];
     },
@@ -585,22 +1168,65 @@ const handlers = {
       return [
         {
           specific_uuids: [CREATURES.NECROMANCER.CONGLOMERATE_OF_LIMBS],
+          noDefaultTraits: true,
           rank: data.rank,
-          itemsToAdd: [EFFECTS.NECROMANCER.THRALL_EXPIRATION(data.duration)],
+          modifications: {
+            "system.attributes.hp.max": data.rank * 10,
+            "system.attributes.hp.value": data.rank * 10,
+          },
+          itemsToAdd: [
+            EFFECTS.RULE_EFFECT([RULE_ELEMENTS.SPELL_DC_FLAG]),
+            EFFECTS.NECROMANCER.THRALL_EXPIRATION(data.duration, {
+              uuid: SOURCES.NECROMANCER.CONGLOMERATE_OF_LIMBS,
+              necromancerLevel: data.summonerLevel,
+              rollOptions: data.summonerRollOptions,
+            }),
+          ],
         },
       ];
     },
 
-    handleCreateThrall: (data) => {
+    handleCreateThrall: async (data) => {
+      const puppeteerBonus = data.summonerRollOptions?.includes(
+        "feature:puppeteer",
+      )
+        ? 1
+        : 0;
+      const amts = {
+        one: 1 + puppeteerBonus,
+        two: 2 + puppeteerBonus,
+      };
+
+      const result = data.ignoreDialogue
+        ? { choice: "one" }
+        : await foundry.applications.api.DialogV2.input({
+            window: {
+              title: "pf2e-summons-assistant.dialog.create-thrall.title",
+              icon: "fa-solid fa-hat-wizard",
+            },
+            content: `
+              <label><input type="radio" name="choice" value="two" checked> ${game.i18n.format("pf2e-summons-assistant.dialog.create-thrall.options.two", { cnt: amts.two, iconSummon: '<i class="fa-duotone fa-solid fa-wand-magic-sparkles"></i>' })}</label>
+              <label><input type="radio" name="choice" value="one"> ${game.i18n.format("pf2e-summons-assistant.dialog.create-thrall.options.one", { cnt: amts.one, s: amts.one > 1 ? "s" : "", iconSummon: '<i class="fa-duotone fa-solid fa-wand-magic-sparkles"></i>', iconCommand: '<i class="fa-solid fa-megaphone"></i>' })}</label>
+            `,
+            ok: {
+              label: "pf2e-summons-assistant.dialog.create-thrall.title",
+              icon: "fa-sharp fa-solid fa-tombstone",
+            },
+          });
+
       return [
         {
           specific_uuids: [CREATURES.NECROMANCER.THRALL],
+          noDefaultTraits: true,
+          modifications: {
+            ...getBaseThrallArtConfig(data.summonerRollOptions),
+          },
           rank: data.rank,
-          amount: getNecromancerProf(data.summonerLevel),
+          amount: amts[result.choice],
           itemsToAdd: [
             EFFECTS.NECROMANCER.THRALL_EXPIRATION(data.duration, {
               uuid: SOURCES.NECROMANCER.CREATE_THRALL,
-              castRank: data.rank,
+              necromancerLevel: data.summonerLevel,
               rollOptions: data.summonerRollOptions,
             }),
           ],
@@ -612,9 +1238,19 @@ const handlers = {
       return [
         {
           specific_uuids: [CREATURES.NECROMANCER.THRALL],
+          noDefaultTraits: true,
+          modifications: {
+            ...getBaseThrallArtConfig(data.summonerRollOptions),
+          },
           rank: data.rank,
           amount: 1,
-          itemsToAdd: [EFFECTS.NECROMANCER.THRALL_EXPIRATION(data.duration)],
+          itemsToAdd: [
+            EFFECTS.NECROMANCER.THRALL_EXPIRATION(data.duration, {
+              uuid: SOURCES.NECROMANCER.CREATE_THRALL,
+              necromancerLevel: data.summonerLevel,
+              rollOptions: data.summonerRollOptions,
+            }),
+          ],
         },
       ];
     },
@@ -623,16 +1259,29 @@ const handlers = {
       return [
         {
           specific_uuids: [CREATURES.NECROMANCER.LIVING_GRAVEYARD],
+          noDefaultTraits: true,
           rank: data.rank,
-          itemsToAdd: [EFFECTS.NECROMANCER.THRALL_EXPIRATION(data.duration)],
+          itemsToAdd: [
+            EFFECTS.RULE_EFFECT([RULE_ELEMENTS.SPELL_DC_FLAG]),
+            EFFECTS.NECROMANCER.THRALL_EXPIRATION(data.duration, {
+              uuid: SOURCES.NECROMANCER.LIVING_GRAVEYARD,
+              necromancerLevel: data.summonerLevel,
+              rollOptions: data.summonerRollOptions,
+            }),
+          ],
         },
         {
           specific_uuids: [CREATURES.NECROMANCER.THRALL],
+          noDefaultTraits: true,
           rank: data.rank,
+          modifications: {
+            ...getBaseThrallArtConfig(data.summonerRollOptions),
+          },
           amount: 5,
           itemsToAdd: [
             EFFECTS.NECROMANCER.THRALL_EXPIRATION(data.duration, {
               uuid: SOURCES.NECROMANCER.CREATE_THRALL,
+              necromancerLevel: data.summonerLevel,
               castRank: data.rank,
               rollOptions: data.summonerRollOptions,
             }),
@@ -645,10 +1294,12 @@ const handlers = {
       return [
         {
           specific_uuids: [CREATURES.NECROMANCER.PERFECTED_THRALL],
+          noDefaultTraits: true,
           rank: data.rank,
           itemsToAdd: [
             EFFECTS.NECROMANCER.THRALL_EXPIRATION(data.duration, {
               uuid: SOURCES.NECROMANCER.PERFECTED_THRALL,
+              necromancerLevel: data.summonerLevel,
               castRank: data.rank,
               rollOptions: data.summonerRollOptions,
             }),
@@ -661,8 +1312,19 @@ const handlers = {
       return [
         {
           specific_uuids: [CREATURES.NECROMANCER.RECURRING_NIGHTMARE],
+          noDefaultTraits: true,
           rank: data.rank,
-          itemsToAdd: [EFFECTS.NECROMANCER.THRALL_EXPIRATION(data.duration)],
+          itemsToAdd: [
+            EFFECTS.RULE_EFFECT([
+              RULE_ELEMENTS.SPELL_DC_FLAG,
+              RULE_ELEMENTS.SPELL_RANK_FLAG(data.rank),
+            ]),
+            EFFECTS.NECROMANCER.THRALL_EXPIRATION(data.duration, {
+              uuid: SOURCES.NECROMANCER.RECURRING_NIGHTMARE,
+              necromancerLevel: data.summonerLevel,
+              rollOptions: data.summonerRollOptions,
+            }),
+          ],
         },
       ];
     },
@@ -670,16 +1332,63 @@ const handlers = {
     handleSkeletalLancers: (data) => {
       return [
         {
-          specific_uuids: [CREATURES.NECROMANCER.SKELETAL_LANCERS],
+          specific_uuids: [CREATURES.NECROMANCER.SKELETAL_LANCER],
+          noDefaultTraits: true,
           rank: data.rank,
           amount: 5,
           itemsToAdd: [
+            EFFECTS.RULE_EFFECT([
+              RULE_ELEMENTS.SPELL_DC_FLAG,
+              RULE_ELEMENTS.SPELL_RANK_FLAG(data.rank),
+            ]),
             EFFECTS.NECROMANCER.THRALL_EXPIRATION(data.duration, {
               uuid: SOURCES.NECROMANCER.SKELETAL_LANCERS,
+              necromancerLevel: data.summonerLevel,
               castRank: data.rank,
               rollOptions: data.summonerRollOptions,
             }),
           ],
+        },
+      ];
+    },
+  },
+  psychic: {
+    handleDancingBlade: async (data) => {
+      const summonerActor = game.actors.get(data.summonerActorId);
+      const isAmped = data?.summonerRollOptions?.includes("amp-spell");
+      let weapon = {
+        id: "",
+        name: "",
+        tokenArt: getJB2aPath(
+          "jb2a.spiritual_weapon.shortsword.01.spectral.02.green",
+        ),
+      };
+      let dialogResult = {};
+      let effect = {};
+      if (!data.ignoreDialogue) {
+        dialogResult = await dancingWeaponDialog(summonerActor, isAmped);
+      }
+
+      if (dialogResult.effect) {
+        effect = dialogResult.effect;
+      }
+      if (dialogResult.weapon) {
+        weapon = dialogResult.weapon;
+      }
+
+      return [
+        {
+          specific_uuids: [CREATURES.PSYCHIC.DANCING_BLADE],
+          noDefaultTraits: true,
+          rank: data.rank,
+          modifications: {
+            "system.details.level.value": data.rank,
+            "prototypeToken.texture.src": weapon.tokenArt,
+          },
+          itemsToAdd: [effect],
+          crosshairParameters: {
+            distance: canvas.grid.distance / 4,
+          },
         },
       ];
     },
@@ -696,16 +1405,82 @@ const handlers = {
   summoner: {
     handleManifestEidolon: async (data) => {
       const uuid = await getEidolon(data.summonerActorId);
-      if (uuid) return [{ specific_uuids: [uuid], isCharacter: true }];
+      if (uuid)
+        return [
+          { specific_uuids: [uuid], noDefaultTraits: true, isCharacter: true },
+        ];
       return null;
+    },
+  },
+  thaumaturge: {
+    handleMirrorsReflection: async (data) => {
+      const actor = game.actors.get(data.summonerActorId);
+      const effect = await fromUuid(EFFECTS.THAUMATURGE.MIRRORS_REFLECTION);
+      return [
+        {
+          specific_uuids: [actor.uuid],
+          noDefaultTraits: true,
+          isCharacter: true,
+          itemsToAdd: [effect],
+          crosshairParameters: {
+            location: {
+              obj: data.position,
+              limitMaxRange: getGridUnitsFromFeet(15),
+              displayRangePoly: true,
+              rangePolyLineColor: 0x0,
+              rangePolyFillColor: 0x0,
+            },
+          },
+        },
+      ];
     },
   },
 
   wondrousFigurine: {
+    handleBismuthLeopards: (data) => {
+      return [
+        {
+          specific_uuids: [CREATURES.LEOPARD],
+          amount: 2,
+          modifications: {
+            name: game.i18n.localize(
+              "pf2e-summons-assistant.creature-name.wondrous-figurine.bismuth-leopard",
+            ),
+            "prototypeToken.name": game.i18n.localize(
+              "pf2e-summons-assistant.creature-name.wondrous-figurine.bismuth-leopard",
+            ),
+            img: "modules/pf2e-summons-assistant/assets/actors/bismuth-leopard.webp",
+            "prototypeToken.texture.src":
+              "modules/pf2e-summons-assistant/assets/tokens/token/bismuth-leopard.webp",
+            "prototypeToken.ring.subject.texture":
+              "modules/pf2e-summons-assistant/assets/tokens/subject/bismuth-leopard.webp",
+          },
+          itemsToAdd: [
+            EFFECTS.WONDROUS_FIGURINE.DURATION({ unit: "minutes", amount: 10 }),
+            EFFECTS.WONDROUS_FIGURINE.BISMUTH_LEOPARDS(),
+          ],
+          crosshairParameters: {
+            texture:
+              "modules/pf2e-summons-assistant/assets/actors/bismuth-leopard.webp",
+          },
+        },
+      ];
+    },
     handleJadeSerpent: (data) => {
       return [
         {
           specific_uuids: [CREATURES.GIANT_VIPER],
+          modifications: {
+            name: game.i18n.localize(
+              "pf2e-summons-assistant.creature-name.wondrous-figurine.jade-serpent",
+            ),
+            "prototypeToken.name": game.i18n.localize(
+              "pf2e-summons-assistant.creature-name.wondrous-figurine.jade-serpent",
+            ),
+          },
+          itemsToAdd: [
+            EFFECTS.WONDROUS_FIGURINE.DURATION({ unit: "minute", amount: 10 }),
+          ],
         },
       ];
     },

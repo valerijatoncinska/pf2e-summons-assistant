@@ -5,12 +5,15 @@ export const MODULE_ID = "pf2e-summons-assistant-tonval-ru";
 export const DEF_TOKEN_CONFIGS = {
   name: "",
   imagePath: "",
+  doWildCard: false,
   scale: 1,
   ringEnabled: false,
   subjectTexture: "",
   subjectScaleCorrection: 1,
+  actorImg: "",
 };
 
+//Source is stored in the SYSTEM IT COMES FROM TO PREVENT ISSUES
 export const SOURCES = {
   SUMMON: {
     SUMMON_DRAGON: "Compendium.pf2e.spells-srd.Item.kghwmH3tQjMIhdH1",
@@ -26,8 +29,7 @@ export const SOURCES = {
     SUMMON_FIEND: "Compendium.pf2e.spells-srd.Item.29ytKctjg7qSW2ff",
     SUMMON_GIANT: "Compendium.pf2e.spells-srd.Item.e9UJoVYUd5kJWUpi",
     SUMMON_MONITOR: "Compendium.pf2e.spells-srd.Item.ZbEHglw5tkJ3grQZ",
-    SUMMON_ROBOT: "Compendium.sf2e-anachronism.spells.Item.KlJEDmAOk1ztdNFf",
-    PHANTASMAL_MINION: "Compendium.pf2e.spells-srd.Item.xqmHD8JIjak15lRk",
+    SUMMON_ROBOT: "Compendium.sf2e.spells.Item.KlJEDmAOk1ztdNFf",
   },
   INCARNATE: {
     TEMPEST_OF_SHADES: "Compendium.pf2e.spells-srd.Item.JLdbyGKhjwAAoRLs",
@@ -38,23 +40,52 @@ export const SOURCES = {
 
   WONDROUS_FIGURINE: {
     JADE_SERPENT: "Compendium.pf2e.equipment-srd.Item.RjJw7iHantxqeJu1",
+    BISMUTH_LEOPARDS: "Compendium.pf2e.equipment-srd.Item.04V1qwob0JGPEx3k",
   },
 
   MISC: {
     AVENGING_WILDWOOD: "Compendium.pf2e.spells-srd.Item.T7N0LrYOLk3SwrFW",
+    BILOCATION: "Compendium.pf2e.spells-srd.Item.HHCgEEkeeShVQf8d",
     CALL_URSINE_ALLY: "Compendium.pf2e.feats-srd.Item.kYYB7ziQZjlgQWWu",
     DRAGON_TURRET: "Compendium.pf2e.spells-srd.Item.eAOClJ1KRSPik8SX",
     DUPLICATE_FOE: "Compendium.pf2e.spells-srd.Item.73rToy0v5Ra9NvL6",
     FLOATING_FLAME: "Compendium.pf2e.spells-srd.Item.2ZdHjnpEQJuqOYSG",
+    HEALING_WELL: "Compendium.pf2e.spells-srd.Item.CzjQtkRuRlzRvwzg",
+    ILLUSORY_CREATURE: "Compendium.pf2e.spells-srd.Item.f8SBoXiXQjlCKqly",
+    INSTANT_MINEFIELD: "Compendium.pf2e.spells-srd.Item.vuehhQN8gPSpqcEK",
     LIGHT: "Compendium.pf2e.spells-srd.Item.WBmvzNDfpwka3qT4",
+    PHANTASMAL_MINION: "Compendium.pf2e.spells-srd.Item.xqmHD8JIjak15lRk",
     PROTECTOR_TREE: "Compendium.pf2e.spells-srd.Item.K9gI08enGtmih5X1",
+    RAISE_THE_HORDE: "Compendium.pf2e.actionspf2e.Item.ND1G3s4lXNUAXc1q",
     SHADOW_SELF: "Compendium.pf2e.feats-srd.Item.7YvOqcdp9Z0RALMp",
+    SWARM_FORTH: "Compendium.pf2e.actionspf2e.Item.E48YTUyreo1kc9GM",
     TELEKINETIC_HAND: "Compendium.pf2e.spells-srd.Item.pwzdSlJgYqN7bs2w",
     WOODEN_DOUBLE: "Compendium.pf2e.spells-srd.Item.aUMmmtPmBdCdVDed",
   },
 
+  MUNDANE: {
+    CANDLE: "Compendium.pf2e.equipment-srd.Item.Ti4gWILk69LPxKuU",
+    LANTERN_BULLSEYE: "Compendium.pf2e.equipment-srd.Item.QrNvP9SgnK9DrerA",
+    LANTERN_HOODED: "Compendium.pf2e.equipment-srd.Item.dIRZ0LL7G31fJNYz",
+    TORCH: "Compendium.pf2e.equipment-srd.Item.8Jdw4yAzWYylGePS",
+  },
+
+  CREATURE_ABILITY: {
+    SHADOW_DOUBLES: "Actor.KE3Xq3ee3Yzmkygl.Item.Q0VRtsqm6etoZxCa",
+  },
+
   WALL: {
+    PRISMATIC_SPHERE: "Compendium.pf2e.spells-srd.Item.PngDCmU0MXZkbu0v",
+    PRISMATIC_WALL: "Compendium.pf2e.spells-srd.Item.iL6TujgTCtRRa0Y0",
     WALL_OF_FIRE: "Compendium.pf2e.spells-srd.Item.IarZrgCeaiUqOuRu",
+    WALL_OF_ICE: "Compendium.pf2e.spells-srd.Item.R5FHRv7VqyRnxg2t",
+    WALL_OF_SHADOW: "Compendium.pf2e.spells-srd.Item.DeF63UTmr7rchF60",
+    WALL_OF_STONE: "Compendium.pf2e.spells-srd.Item.kOa055FIrO9Smnya",
+    WALL_OF_THORNS: "Compendium.pf2e.spells-srd.Item.KsWhliKfUs3IpW3c",
+  },
+
+  COMMANDER: {
+    PLANT_BANNER: "Compendium.pf2e.feats-srd.Item.xEeCaJsQeDtRAVk1",
   },
 
   KINETICIST: {
@@ -63,64 +94,80 @@ export const SOURCES = {
   },
 
   NECROMANCER: {
-    CREATE_THRALL:
-      "Compendium.pf2e-playtest-data.impossible-playtest-spells.Item.77lglowVpcnRRh3g",
-    PERFECTED_THRALL:
-      "Compendium.pf2e-playtest-data.impossible-playtest-spells.Item.kFkhtDYsR9fE0pAr",
-    SKELETAL_LANCERS:
-      "Compendium.pf2e-playtest-data.impossible-playtest-spells.Item.qtgps2eYcmWueed1",
-    LIVING_GRAVEYARD:
-      "Compendium.pf2e-playtest-data.impossible-playtest-spells.Item.SK8vQklaSQGd5DXw",
-    RECURRING_NIGHTMARE:
-      "Compendium.pf2e-playtest-data.impossible-playtest-spells.Item.ZVQziQ2l2vdZ5Wfr",
-    CONGLOMERATE_OF_LIMBS:
-      "Compendium.pf2e-playtest-data.impossible-playtest-spells.Item.OOmk0XI3lzhn42JT",
+    BLOODY_TENDRILS: "Compendium.pf2e.spells-srd.Item.qy5NVKy2A3LwNleW",
+    CREATE_THRALL: "Compendium.pf2e.spells-srd.Item.1JaRoJvlf8EPvnnD",
+    PERFECTED_THRALL: "Compendium.pf2e.spells-srd.Item.34d5j4TJFMwz4b8f",
+    SKELETAL_LANCERS: "Compendium.pf2e.spells-srd.Item.7wxPCEuw7XHhnfgf",
+    LIVING_GRAVEYARD: "Compendium.pf2e.spells-srd.Item.iCzdCea2tm1oVpRf",
+    RECURRING_NIGHTMARE: "Compendium.pf2e.spells-srd.Item.ecXhGEAX3PYd6FqK",
+    CONGLOMERATE_OF_LIMBS: "Compendium.pf2e.spells-srd.Item.2isMyTRtpZy0Xinj",
 
-    INEVITABLE_RETURN:
-      "Compendium.pf2e-playtest-data.impossible-playtest-actions.Item.jyhYP51XI09DFSqy",
+    INEVITABLE_RETURN: "Compendium.pf2e.actionspf2e.Item.9KkkDjNz5HMtutwA",
 
     // Does not need slug, special case
+    // TODO updated it when it is added
     BIND_HEROIC_SPIRIT_STRIKE:
       "Compendium.pf2e-playtest-data.impossible-playtest-effects.Item.MTYxqIqJVzza1Lro",
   },
 
-  COMMANDER: {
-    PLANT_BANNER: "Compendium.pf2e.feats-srd.Item.xEeCaJsQeDtRAVk1",
+  PSYCHIC: {
+    DANCING_BLADE: "Compendium.pf2e.spells-srd.Item.ViqzVEprQVzCXZ9f",
   },
 
+  SUMMONER: {
+    MANIFEST_EIDOLON: "Compendium.pf2e.actionspf2e.Item.n5vwBnLSlIXL9ptp",
+  },
+
+  THAUMATURGE: {
+    MIRRORS_REFLECTION: "Compendium.pf2e.actionspf2e.Item.Mh4Vdg6gu8g8RAjh",
+  },
+
+  //SF2e
   MECHANIC: {
     DEPLOY_MINE:
       "Compendium.starfinder-field-test-for-pf2e.actions.Item.ccVcznj9KVYHLVaY",
     DOUBLE_DEPLOYMENT:
       "Compendium.starfinder-field-test-for-pf2e.feats.Item.x5rhl6ThqqjHGglD",
   },
-
-  SUMMONER: {
-    MANIFEST_EIDOLON: "Compendium.pf2e.actionspf2e.Item.n5vwBnLSlIXL9ptp",
-  },
 };
+
+export const SOURCE_UUIDS = getAllSourceUUIDs();
 
 export const SLUG_TO_SOURCE = {
   "avenging-wildwood": SOURCES.MISC.AVENGING_WILDWOOD,
+  bilocation: SOURCES.MISC.BILOCATION,
+  "bloody-tendrils": SOURCES.NECROMANCER.BLOODY_TENDRILS,
   "call-fluxwraith": SOURCES.CALL_FLUXWRAITH,
   "call-ursine-ally": SOURCES.CALL_URSINE_ALLY,
+  candle: SOURCES.MUNDANE.CANDLE,
   "conglomerate-of-limbs": SOURCES.NECROMANCER.CONGLOMERATE_OF_LIMBS,
   "create-thrall": SOURCES.NECROMANCER.CREATE_THRALL,
+  "dancing-blade": SOURCES.PSYCHIC.DANCING_BLADE,
   "deploy-mine": SOURCES.MECHANIC.DEPLOY_MINE,
   "double-deployment": SOURCES.MECHANIC.DOUBLE_DEPLOYMENT,
   "dragon-turret": SOURCES.MISC.DRAGON_TURRET,
   "duplicate-foe": SOURCES.MISC.DUPLICATE_FOE,
   "floating-flame": SOURCES.MISC.FLOATING_FLAME,
+  "healing-well": SOURCES.MISC.HEALING_WELL,
+  "illusory-creature": SOURCES.MISC.ILLUSORY_CREATURE,
   "inevitable-return": SOURCES.NECROMANCER.INEVITABLE_RETURN,
+  "instant-minefield": SOURCES.MISC.INSTANT_MINEFIELD,
   "jagged-berms": SOURCES.KINETICIST.JAGGED_BERMS,
+  "lantern-bulls-eye": SOURCES.MUNDANE.LANTERN_BULLSEYE,
+  "lantern-hooded": SOURCES.MUNDANE.LANTERN_HOODED,
   light: SOURCES.MISC.LIGHT,
   "living-graveyard": SOURCES.NECROMANCER.LIVING_GRAVEYARD,
   "manifest-eidolon": SOURCES.SUMMONER.MANIFEST_EIDOLON,
+  "mirrors-reflection": SOURCES.THAUMATURGE.MIRRORS_REFLECTION,
   "perfected-thrall": SOURCES.NECROMANCER.PERFECTED_THRALL,
   "phantasmal-minion": SOURCES.MISC.PHANTASMAL_MINION,
   "plant-banner": SOURCES.COMMANDER.PLANT_BANNER,
+  "prismatic-sphere": SOURCES.WALL.PRISMATIC_SPHERE,
+  "prismatic-wall": SOURCES.WALL.PRISMATIC_WALL,
   "protector-tree": SOURCES.MISC.PROTECTOR_TREE,
+  "raise-the-horde": SOURCES.MISC.RAISE_THE_HORDE,
   "recurring-nightmare": SOURCES.NECROMANCER.RECURRING_NIGHTMARE,
+  "shadow-doubles": SOURCES.CREATURE_ABILITY.SHADOW_DOUBLES,
   "shadow-self": SOURCES.SHADOW_SELF,
   "skeletal-lancers": SOURCES.NECROMANCER.SKELETAL_LANCERS,
   "summon-animal": SOURCES.SUMMON.SUMMON_ANIMAL,
@@ -139,48 +186,39 @@ export const SLUG_TO_SOURCE = {
   "summon-plant-or-fungus": SOURCES.SUMMON.SUMMON_PLANT_OR_FUNGUS,
   "summon-robot": SOURCES.SUMMON.SUMMON_ROBOT,
   "summon-undead": SOURCES.SUMMON.SUMMON_UNDEAD,
+  "swarm-forth": SOURCES.MISC.SWARM_FORTH,
   "telekinetic-hand": SOURCES.MISC.TELEKINETIC_HAND,
   "tempest-of-shades": SOURCES.INCARNATE.TEMPEST_OF_SHADES,
+  torch: SOURCES.MUNDANE.TORCH,
   "timber-sentinel": SOURCES.KINETICIST.TIMBER_SENTINEL,
   "wondrous-figurine-jade-serpent": SOURCES.WONDROUS_FIGURINE.JADE_SERPENT,
   "activation-wondrous-figurine-jade-serpent":
     SOURCES.WONDROUS_FIGURINE.JADE_SERPENT,
+  "wondrous-figurine-bismuth-leopards":
+    SOURCES.WONDROUS_FIGURINE.BISMUTH_LEOPARDS,
+  "activation-wondrous-figurine-bismuth-leopards":
+    SOURCES.WONDROUS_FIGURINE.BISMUTH_LEOPARDS,
+  "wall-of-ice": SOURCES.WALL.WALL_OF_ICE,
   "wall-of-fire": SOURCES.WALL.WALL_OF_FIRE,
+  "wall-of-stone": SOURCES.WALL.WALL_OF_STONE,
+  "wall-of-shadow": SOURCES.WALL.WALL_OF_SHADOW,
+  "wall-of-thorns": SOURCES.WALL.WALL_OF_THORNS,
   "wooden-double": SOURCES.MISC.WOODEN_DOUBLE,
 };
 
 export const CREATURES = {
-  PHANTASMAL_MINION:
-    "Compendium.pf2e.pathfinder-bestiary.Actor.j7NNPfZwD19BwSEZ",
-  LIGHT: {
-    BLUE: "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.REPqt5wULBcqIM97",
-    DARK_BLUE:
-      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.5nY61gR66kynnp5q",
-    GREEN:
-      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.oESGKDON1Fi3dETS",
-    WHITE:
-      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.pRL4h1K1hHBkEbIE",
-    YELLOW:
-      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.wth1JZ22hGEusEC5",
-  },
-  FLOATING_FLAME:
-    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.HOq9yGxQLhhZcEAP",
-  TELEKINETIC_HAND:
-    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.llXyX6eS8UHGqpnn",
-
-  DUPLICATE_FOE:
-    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.03gFpid5kBiI3vXS",
-
   AVENGING_WILDWOOD:
     "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.LB2e6ze90XNiwFcW",
-
-  WOODEN_DOUBLE:
-    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.WNBOiDVexWG6DwCO",
-
-  HEALING_SERVITOR:
-    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.gqrW5aGfnjqNse2T",
-  TEMPEST_OF_SHADES:
-    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.EwmHOiQTdCEmBKfA",
+  BLACK_BEAR: "Compendium.pf2e.pathfinder-bestiary-2.Actor.xxP5FJotshmUQNtY",
+  CAVE_BEAR: "Compendium.pf2e.pathfinder-monster-core.Actor.AZIG0COCaDBronJa",
+  COMMANDER: {
+    PLANTED_BANNER:
+      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.D8gtAM19NQKqbBfW",
+  },
+  DRAGON_TURRET:
+    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.UGy4139EDrjbVDbv",
+  DUPLICATE_FOE:
+    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.03gFpid5kBiI3vXS",
   ELEMENTAL_HERALD: {
     AIR: "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.upqvdqYb387AV0mW",
     EARTH:
@@ -192,56 +230,103 @@ export const CREATURES = {
       "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.5pPl44PJyTu14aZM",
     WOOD: "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.y1WKpar1MIgAN45Y",
   },
+  FLOATING_FLAME:
+    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.HOq9yGxQLhhZcEAP",
   FLUXWRAITH:
     "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.3wO8dqpYCdGhIUla",
-
-  WALL_OF_FIRE:
-    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.r60N6I3qmqC8K965",
-
-  SHADOW_SELF: "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.nodnIFYW56Lk3mcY",
-
-  DRAGON_TURRET:
-    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.UGy4139EDrjbVDbv",
-
-  BLACK_BEAR: "Compendium.pf2e.pathfinder-bestiary-2.Actor.xxP5FJotshmUQNtY",
+  GIANT_VIPER: "Compendium.pf2e.pathfinder-monster-core.Actor.AJ5LuNMVPLCydryP",
   GRIZZLY_BEAR:
     "Compendium.pf2e.pathfinder-monster-core.Actor.6K4RWus85o8iqy0t",
-  POLAR_BEAR: "Compendium.pf2e.pathfinder-bestiary-2.Actor.UqFObUjgFAlWrriA",
-  CAVE_BEAR: "Compendium.pf2e.pathfinder-monster-core.Actor.AZIG0COCaDBronJa",
-
-  GIANT_VIPER: "Compendium.pf2e.pathfinder-monster-core.Actor.AJ5LuNMVPLCydryP",
-
-  PROTECTOR_TREE:
-    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.jVsAEp6bR4mXtwHQ",
-
-  COMMANDER: {
-    PLANTED_BANNER:
-      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.D8gtAM19NQKqbBfW",
-  },
-
+  HEALING_SERVITOR:
+    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.gqrW5aGfnjqNse2T",
+  HEALING_WELL:
+    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.4JEJfYNtUzSuYxPW",
+  INSTANT_MINEFIELD_MINE:
+    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.uQjg9X2YxIUCuqyF",
+  ILLUSORY_CREATURE:
+    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.VXLBDKFs8HmZvi1u",
   KINETICIST: {
     JAGGED_BERMS:
       "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.Q93AQlbUTJcPlxYI",
   },
-
+  LEOPARD: "Compendium.pf2e.pathfinder-monster-core.Actor.kB7FNn3vosp6cqQg",
+  LIGHT: {
+    BLUE: "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.REPqt5wULBcqIM97",
+    DARK_BLUE:
+      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.5nY61gR66kynnp5q",
+    GREEN:
+      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.oESGKDON1Fi3dETS",
+    WHITE:
+      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.pRL4h1K1hHBkEbIE",
+    YELLOW:
+      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.wth1JZ22hGEusEC5",
+  },
   MECHANIC: {
     MINE: "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.sAVuxP25VE126TdZ",
   },
-
+  MUNDANE: {
+    CANDLE:
+      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.fTM3vgcCM5bAJmrS",
+    LANTERN_BULLSEYE:
+      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.NYZhWZaM91h2pyrr",
+    LANTERN_HOODED:
+      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.Fne56CFRula1SkY0",
+    TORCH:
+      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.arDOv12cxLYNh2tW",
+  },
+  NECROLOGISTS_HORDE:
+    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.NnaI8Zd5ZFfz8zs2",
   NECROMANCER: {
     THRALL:
-      "Compendium.pf2e-playtest-data.impossible-playtest-thralls.Actor.ISmLeI8zNc6YWysQ",
+      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.ISmLeI8zNc6YWysQ",
     PERFECTED_THRALL:
-      "Compendium.pf2e-playtest-data.impossible-playtest-thralls.Actor.SX5QACMD5SvH9oeZ",
-    SKELETAL_LANCERS:
-      "Compendium.pf2e-playtest-data.impossible-playtest-thralls.Actor.d1333zUKqydfJM9b",
+      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.SX5QACMD5SvH9oeZ",
+    SKELETAL_LANCER:
+      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.d1333zUKqydfJM9b",
     LIVING_GRAVEYARD:
-      "Compendium.pf2e-playtest-data.impossible-playtest-thralls.Actor.CN6TMEeEd0Wmvkct",
+      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.CN6TMEeEd0Wmvkct",
     RECURRING_NIGHTMARE:
-      "Compendium.pf2e-playtest-data.impossible-playtest-thralls.Actor.uu7VA9eIwi1tUZVs",
+      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.uu7VA9eIwi1tUZVs",
     CONGLOMERATE_OF_LIMBS:
-      "Compendium.pf2e-playtest-data.impossible-playtest-thralls.Actor.Xuy2zf3qpsmm8wbb",
+      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.Xuy2zf3qpsmm8wbb",
+    BLOODY_TENDRIL:
+      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.Lze0S4zRd0SLAzW0",
   },
+  OZTHOOM_SHADOW_DOUBLE:
+    "Compendium.pf2e.pathfinder-monster-core-2.Actor.wNa8UPQqSepdxscG",
+  PHANTASMAL_MINION:
+    "Compendium.pf2e.pathfinder-bestiary.Actor.j7NNPfZwD19BwSEZ",
+  POLAR_BEAR: "Compendium.pf2e.pathfinder-bestiary-2.Actor.UqFObUjgFAlWrriA",
+  PRISMATIC_SPHERE:
+    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.hHwCVmWjtt0h0R8m",
+  PRISMATIC_WALL:
+    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.pJAxxrQMgA9ColPy",
+  PROTECTOR_TREE:
+    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.jVsAEp6bR4mXtwHQ",
+  PSYCHIC: {
+    DANCING_BLADE:
+      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.l4LKNqL0Vp9dUAvF",
+  },
+  SHADOW_SELF:
+    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.nodnIFYW56Lk3mcY",
+  SWARMKEEPER_SWARM:
+    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.OLl3yZYdsc3CLrld",
+  TELEKINETIC_HAND:
+    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.llXyX6eS8UHGqpnn",
+  TEMPEST_OF_SHADES:
+    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.EwmHOiQTdCEmBKfA",
+  WALL_OF_ICE:
+    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.gGDK0P3m075eIq6A",
+  WALL_OF_FIRE:
+    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.r60N6I3qmqC8K965",
+  WALL_OF_SHADOW:
+    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.omSEou6InnxMi78O",
+  WALL_OF_STONE:
+    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.HakOgoig5LWhcq1B",
+  WALL_OF_THORNS:
+    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.Fj667D4Ayvi11Vjl",
+  WOODEN_DOUBLE:
+    "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-actors.Actor.WNBOiDVexWG6DwCO",
 };
 
 export const FEATS = {
@@ -250,6 +335,19 @@ export const FEATS = {
       "Compendium.starfinder-field-test-for-pf2e.feats.Item.zsXV8mcHVZqx6FVj",
   },
 };
+
+export const WALLS_TO_SYNC_DELETE = new Set([
+  CREATURES.WALL_OF_STONE,
+  CREATURES.WALL_OF_ICE,
+  CREATURES.WALL_OF_SHADOW,
+  CREATURES.PRISMATIC_SPHERE,
+  CREATURES.PRISMATIC_WALL,
+]);
+
+export const REGIONS_TO_SYNC_DELETE = new Set([CREATURES.WALL_OF_THORNS]);
+export const TOKENS_TO_SYNC_DELETE = new Set([CREATURES.WALL_OF_THORNS]);
+
+export const LIGHTS_TO_SYNC_DELETE = new Set([CREATURES.PRISMATIC_WALL]);
 
 export const SUMMON_LEVELS_BY_RANK = {
   1: -1,
@@ -321,6 +419,10 @@ export const EFFECTS = {
       },
       img: "icons/magic/death/grave-tombstone-glow-teal.webp",
     }),
+  },
+  THAUMATURGE: {
+    MIRRORS_REFLECTION:
+      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-items.Item.1I6uoL93lNAUZQ1t",
   },
   COMMANDER: {
     IN_PLANT_BANNER_RANGE:
@@ -449,6 +551,68 @@ export const EFFECTS = {
   CONDITIONS: {
     INVISIBLE: "Compendium.pf2e.conditionitems.Item.zJxUflt9np0q4yML",
   },
+  BILOCATION: {
+    name: "Effect: Bilocation",
+    type: "effect",
+    img: "icons/skills/social/trading-justice-scale-gold.webp",
+    system: {
+      duration: {
+        value: 10,
+        unit: "minutes",
+        expiry: "turn-start",
+      },
+      slug: "effect-bilocation",
+    },
+  },
+  WONDROUS_FIGURINE: {
+    BISMUTH_LEOPARDS: () => ({
+      name: game.i18n.localize(
+        "pf2e-summons-assistant.items.effects.wondrous-figurine.bismuth-leopard.flash-aura",
+      ),
+      img: "icons/magic/control/buff-luck-fortune-rainbow.webp",
+      type: "effect",
+      system: {
+        publication: {
+          title: "PF2e Summons Assistant",
+          license: "OGL",
+          remaster: true,
+        },
+        rules: [
+          {
+            key: "Aura",
+            effects: [
+              {
+                uuid: "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-items.Item.eoUfWHoPEMmNj8od",
+                // Flash Indicator
+              },
+            ],
+          },
+        ],
+      },
+    }),
+    DURATION: ({ unit, amount }) => ({
+      name: game.i18n.localize(
+        "pf2e-summons-assistant.items.effects.wondrous-figurine.duration",
+      ),
+      type: "effect",
+      img: "icons/magic/time/clock-stopwatch-white-blue.webp",
+      system: {
+        publication: {
+          title: "PF2e Summons Assistant",
+          license: "OGL",
+          remaster: true,
+        },
+        duration: {
+          value: amount,
+          unit: unit,
+          sustained: false,
+        },
+        tokenIcon: {
+          show: false,
+        },
+      },
+    }),
+  },
 };
 
 export const ACTIONS = {
@@ -481,11 +645,21 @@ export const ACTIONS = {
       img: "systems/pf2e/icons/actions/Passive.webp",
     }),
   },
+  DANCING_BLADE: {
+    GUARD:
+      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-items.Item.JdCfKdOAdumgw6aU",
+    PUSH: "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-items.Item.cyjLIVsxZbJNr4PF",
+  },
+  THAUMATURGE: {
+    SHATTER_REFLECTION:
+      "Compendium.pf2e-summons-assistant.pf2e-summons-assistant-items.Item.mv56YnVvWLylqJWM",
+  },
 };
 
 export const ROLL_OPTION = {
   COMMANDER: {
     IN_PLANT_BANNER_RANGE: "self:effect:in-plant-banner-range",
+    HAS_PLANT_BANNER_FEAT: "feat:plant-banner",
   },
 };
 
@@ -502,4 +676,93 @@ export const RULE_ELEMENTS = {
     path: "flags.pf2e-summons-assistant.dc",
     value: "@item.origin.system.attributes.spellDC.value",
   },
+  SPELL_RANK_FLAG: (rank) => ({
+    key: "ActiveEffectLike",
+    mode: "add",
+    path: "flags.pf2e-summons-assistant.rank",
+    value: rank,
+  }),
 };
+
+export const AFFECTED_BY_HOUSE_RULES = new Set(Object.values(SOURCES.SUMMON));
+
+function getAllSourceUUIDs() {
+  const uuids = new Set();
+  for (const category of Object.values(SOURCES)) {
+    for (const uuid of Object.values(category)) {
+      uuids.add(uuid);
+    }
+  }
+  return uuids;
+}
+
+// TODO remove me when v13 support is dropped
+export const SENSE_MODES = {
+  NONE: CONST?.EDGE_SENSE_TYPES?.NONE ?? CONST?.WALL_SENSE_TYPES?.NONE,
+  LIMITED: CONST?.EDGE_SENSE_TYPES?.LIMITED ?? CONST?.WALL_SENSE_TYPES?.LIMITED,
+  NORMAL: CONST?.EDGE_SENSE_TYPES?.NORMAL ?? CONST?.WALL_SENSE_TYPES?.NORMAL,
+  PROXIMITY:
+    CONST?.EDGE_SENSE_TYPES?.PROXIMITY ?? CONST?.WALL_SENSE_TYPES?.PROXIMITY,
+  DISTANCE:
+    CONST?.EDGE_SENSE_TYPES?.DISTANCE ?? CONST?.WALL_SENSE_TYPES?.DISTANCE,
+};
+
+export const WEAPON_DAMAGE_TYPE_MODIFIERS = {
+  RUNES: {
+    ashen: "fire",
+    greaterAshen: "fire",
+    astral: "spirit",
+    greaterAstral: "spirit",
+    brilliant: "fire",
+    greaterBrilliant: "fire",
+    corrosive: "acid",
+    greaterCorrosive: "acid",
+    decaying: "void",
+    greaterDecaying: "void",
+    flaming: "fire",
+    greaterFlaming: "fire",
+    frost: "cold",
+    greaterFrost: "cold",
+    holy: "spirit",
+    impactful: "force",
+    greaterImpactful: "force",
+    nightmare: "mental",
+    shock: "electricity",
+    greaterShock: "electricity",
+    thundering: "sonic",
+    greaterThundering: "sonic",
+    unholy: "spirit",
+    vitalizing: "vitality",
+    greaterVitalizing: "vitality",
+  },
+  TRAITS: {
+    "versatile-b": "bludgeoning",
+    "versatile-p": "piercing",
+    "versatile-s": "slashing",
+    "versatile-acid": "acid",
+    "versatile-cold": "cold",
+    "versatile-electricity": "electricity",
+    "versatile-fire": "fire",
+    "versatile-force": "force",
+    "versatile-mental": "mental",
+    "versatile-poison": "poison",
+    "versatile-sonic": "sonic",
+    "versatile-spirit": "spirit",
+    "versatile-vitality": "vitality",
+    "versatile-void": "void",
+  },
+};
+
+export const COLORS = {
+  PRISMATIC: {
+    violet: "#EE82EE",
+    indigo: "#4B0082",
+    blue: "#0000FF",
+    green: "#008000",
+    yellow: "#FFFF00",
+    orange: "#FFA500",
+    red: "#FF0000",
+  },
+};
+
+export const SIZES = ["tiny", "sm", "med", "lg", "huge", "grg"];

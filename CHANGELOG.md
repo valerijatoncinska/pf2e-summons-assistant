@@ -1,5 +1,356 @@
 ## Unreleased
 
+## 2.11.3
+
+- Fixed issue with skeletal lancers thrall (🖥️@Suldrun45)
+
+
+## 2.11.2
+
+- Fixed issue with perfected thrall (🖥️@Suldrun45)
+
+## 2.11.1
+
+- **Update**
+  - Updated art for most thralls to use `PF2e Bestiaries` (@ricothebold)
+
+## 2.11.0
+
+- **New**
+  - Added a custom `Thrall Boost` spell
+    - This includes an effect which will boost thrall damage
+    - Added optional dependency for `PF2e Brewrata` to allow easy swapping of the spell
+- **Update**
+  - Modified all thralls with additional boosts to instead apply those when `Spell Effect: Thrall Boost` is on them
+  - Updated flag selection rule elements to work in SF2e
+  - Fixed damage on perfected thrall (@Suldrun45)
+  - Made the downstream requirements from Foundry Summons explicit in this module to prevent the old foundry no install dependencies meme
+
+## 2.10.6
+
+- Fixed issue with customization not working
+
+## 2.10.5
+
+- **Updated**
+  - Fixed error introduced in `2.10.2` causing customization to not work (🐛 @A Helpful Drow)
+  - Added option to customize actor image for summons
+  - Added automated adding of bone speed bonus to summons
+  - Fixed thrall art override being swapped for `spirit` and `bone`
+
+## 2.10.4
+
+- Updated Chinese translation (🌐 @AlphaStarguide)
+
+## 2.10.3
+
+- Fixed issue caused for `Create Thrall` in the last update
+
+## 2.10.2
+
+- **Updated**
+  - Added feature specific base thrall art override
+  - Added support for wildcard on customizing token
+  - Trying a new release method
+
+## 2.10.1
+
+- Added the `mindless` trait to thralls
+
+## 2.10.0
+
+- **New**
+  - Added support for `Bloodied Tendrils` _includes some neat little art I drew up_ (❔ @harisbinali)
+- **Updated**
+  - Fixed all existing necromancer spell handling (and the actors) to use the new thralls and spells as opposed to how they worked in the playtest
+  - Made changes to how `The Hallowed Dead` was supported
+  - Remove compatability patch for v12
+
+## 2.9.1
+
+- **Updated**
+  - Update the creation count for `Create Thrall` to use the method from `Impossible Magic` as opposed to its playtest variant
+  - Added very basic support for `Puppeteer` (currently it just adds a blanket +1 Thrall to `Create Thrall`)
+  - Added Support for `The Hallowed Dead`
+  - Updated check for `Spiritmonger` to `Spirit`
+
+## 2.9.0
+
+- **New**
+  - Added temporary copies of the thralls from the `Impossible Magic Playtest` to make them usable in the `Impossible Magic` system release
+    - Mapped the default art to close enough art from various `Pathfinder Tokens` art packs, but this is a holdover until thralls are introduced in the system
+- **Updated**
+  - **BREAKING** If you have a necromancer built with `Impossible Magic Playtest` you will need to rebuild them in the new system release to work with this release
+  - Updated **pf2e** requirement version `8.4.0`
+  - Remapped all necromancer `Impossible Magic Playtest` UUIDs to the new `Impossible Magic` system UUIDs
+  - Added automated release option
+
+## 2.8.7
+
+- Fixed bug causing thralls to not have their attack value updated to match the spell attack roll (🐛 @Sol (Veronica))
+
+## 2.8.6
+
+- Updated Polish translation (🌐 @Lioheart)
+
+## 2.8.5
+
+- Pass level data of the summoner token to their summons (🐛 @silentbrad)
+
+## 2.8.4
+
+- Updated french translation (🌐 @rectulo)
+
+## 2.8.3
+
+- Fixed Incorrect AC (using Spell DC instead of Spell Attack) for `Illusory Creature` (🐛 @Happy)
+
+## 2.8.2
+
+- `Illusory Creature` now also updates the summon's Actor Image as well
+
+## 2.8.1
+
+- Fixed improper uuid for `Illusory Creature` (🐛 @Maple)
+
+## 2.8.0
+
+- **New**
+  - `Illusory Creature` support (💡 @Maple)
+  - `Wall of Thorns` support _does not implement cover_ (💡 @David Silver)
+  - `Wondrous Figurine - Bismuth Leopard` support
+- **Updated**
+  - Added a name update for `Jade Serpent`
+  - Added localization for summon menu options
+  - Locked preview rotation for summons with a max range
+  - Updated chinese translation (🌐 @AlphaStarGuide)
+
+## 2.7.1
+
+- **Updated**
+  - Fixed issue causing `Mirror's Implement` dismissal dialogue to appear outside of tokens iwth the effect when knocked unconscious (🐛 @sasane)
+
+## 2.7.0
+
+- **New**
+  - `Bilocation` support _for PCs_ (💡 @sasane)
+- **Updated**
+  - `Mirror Implement`'s range is now accurately shown
+  - Fixed spelling issue with a setting
+
+## 2.6.0
+
+- **New**
+  - `Mirror Implement` Thaumaturge support
+- **Updated**
+  - Added a default pick for `Dancing Blade`
+  - Added a way in specific summons to exclude default summoned traits from some summon
+
+## 2.5.4
+
+- Fixed bug introduced in `2.2.0` that was causing summons such as `Wall of Stone` to break due to issue with function `crosshairParameters` (🐛 @mgoldstein322)
+
+## 2.5.3
+
+- **Update**
+  - Updated polish translation (🌐 @lioheart)
+
+## 2.5.2
+
+- **Update**
+  - Fixed error with new `Light` spell dialogue (🐛 @Ottyn)
+
+## 2.5.1
+
+- **Update**
+  - Fixed unnecessary basic tag on some of the parts of `Prismatic Wall` saves (🐛 @rectulo)
+  - Fix Mechanic's Mine Automation (💻 @Sasane)
+  - Updated french translation (🌐 @rectulo)
+  - Updated chinese translation (🌐 @AlphaStarGuide)
+
+## 2.5.0
+
+- **New**
+  - `Prismatic Wall` support
+- **Updated**
+  - `Light` spell will now ask you before summoning when you have no target (💡 @TheTenk)
+  - Removed the source from the releases to improve file size
+
+## 2.4.1
+
+- **Updated**
+  - Added a section on `Prismatic Sphere` to show what it blocks currently
+
+## 2.4.0
+
+- **New**
+  - `Prismatic Sphere` support (💡 @FunFun)
+- **Updated**
+  - Handles level data now to summon on the same level as the summoner
+  - Added better handling for grabbing the DC from the spell cast
+  - Fixed some missing action categorization on a few action
+
+## 2.3.3
+
+- Updated polish translation (🌐 @lioheart)
+- Updated chinese translation (🌐 @AlphaStarGuide)
+
+## 2.3.2
+
+- Updated range detection so it fallsback to `feet` regardless of your chosen language
+
+## 2.3.1
+
+- Fixed damage scaling on `thrall` being higher than accurate (🐛 @Sol (Veronica))
+
+## 2.3.0
+
+- **New**
+  - `Dancing Blade` support (💡 @t-santana)
+    - **Note** requires jb2a for the art to show
+    - Also supports `Amped` and `Non Amped` casting
+
+## 2.2.2
+
+- Updated french translation (🌐 @rectulo)
+
+## 2.2.1
+
+- Fixed issue with missing pack items
+
+## 2.2.0
+
+- **New**
+  - Added support for `Wall of Shadow`
+  - Added range checking for spells (Also supports `Reach Spell` modifying said range)
+    - Note this relies on newly added localization and only supports `feet` currently (or it's equivalent) but it will fall back to the english translation if the translation for it isn't inputted yet for your language
+- **Updated**
+  - Updated workflow for the placement of straight walls to make the controls more intuitive
+  - Added some coloration to the `Wall` spell controlling token to clarify what it controls
+  - Fixed bug with `Image Only` toggle in forge (🐛 @pv42)
+  - Reworked some backend code to improve maintainability
+  - Migrated compendiums properly
+
+## 2.1.2
+
+- Updated all translations to fix a bug causing the minion reminder tooltip to spill into the message
+
+## 2.1.1
+
+- Added missing packs
+
+## 2.1.0
+
+- Added support for `Wall of Ice`
+
+## 2.0.5
+
+- Fixed bug causing `Planted Banner` not to spawn (🐛 @MystiKitt)
+
+## 2.0.4
+
+- Use elite/weak level adjustment for determining allowed summons (💻🐛 @pv42)
+
+## 2.0.3
+
+- Fixed the `Instant Minefield` count (💻🐛 @pv42)
+- Updated french translation (🌐 @rectulo)
+- Updated polish translation (🌐 @lioheart)
+- Updated chinese translation (🌐 @AlphaStarGuide)
+
+## 2.0.2
+
+- Fixed issue with specific summons not working in `SF2e` system (🐛 @Sasane)
+
+## 2.0.1
+
+- Fixed issue causing the module to fail in the `SF2e` system (🐛 @Sasane)
+
+## 2.0.0
+
+- Updated to support Fvtt `v14` (new minimum is `v13`)
+- Added support for `PF2e Anachronism` for the `SF2E` system
+
+## 1.27.1
+
+- Fixed bug causing module to fail (🐛 @Ottyn)
+
+## 1.27.0
+
+- **New**
+  - Added Support for:
+    - `Ankou`/`Ozthoom`'s `Shadow Doubles` ability
+    - `Instant Minefield` (💡 @pv42)
+    - `Necrologist's Horde` - Can sync health automatically to the summoner if you have the `PF2e Toolbelt` feature enabled (💡 @digitalshadowhawk)
+
+## 1.26.1
+
+- **New**
+  - Automatically links up `Swarmkeeper's Swarm`'s Health to the summoner if you have the `Pf2e Toolbelt` feature enabled
+- **Updated**
+  - Fix `Swarmkeeper's Swarm` Crosshair snapping and size
+
+## 1.26.0
+
+- **New**
+  - Added support for the following:
+    - `Healing Well` (💡 @Jamz)
+    - `Swarmkeeper's Swarm` - Basic Implementation, does not have a way to sync health to the Swarmkeeper (💡 @Kosovoy)
+    - `Torch`
+    - `Lantern (Bull's Eye)`
+    - `Lantern (Hooded)`
+    - `Candle`
+- **Updated**
+  - Fixed bug causing the `Plant Banner` to not actually apply the +1 against fear
+
+## 1.25.9
+
+- Fixed plant banner range
+
+## 1.25.8
+
+- Fixed the RE for `Plant Banner`
+
+## 1.25.7
+
+- Fixed issue where Commander received the temp HP from `Plant Banner` more intelligently (🐛 @thecoolersub)
+
+## 1.25.6
+
+- Fixed issue where Commander received the temp HP from `Plant Banner` (🐛 @thecoolersub)
+
+## 1.25.5
+
+- Updated polish translation (🌐 @lioheart)
+
+## 1.25.4
+
+- Fixed bug introduced in `1.25.1` that caused dialogue based summons fail
+
+## 1.25.3
+
+- **Updated**
+  - Fixed issues with database not properly updating due to `gitignore`
+  - Updated french translation (🌐 @rectulo)
+
+## 1.25.2
+
+- **Updated**
+  - Made it so house rules only affect `Summon <X>` Spells as opposed to all spells (no more 16 AC walls) (🐛 @Nythz)
+
+## 1.25.1
+
+- **Updated**
+  - Fixed issue where summons dialogue opened when opening item sheets
+
+## 1.25.0
+
+- **New**
+  - Added support for `Wall of Stone`
+- **Updated**
+  - Fixed issue where `damage-rolls` were being counted for summon sources
+  - Updated chinese translation (🌐 @AlphaStarGuide)
+
 ## 1.24.0
 
 - **New**

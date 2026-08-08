@@ -1,6 +1,7 @@
-import { MODULE_ID, SLUG_TO_SOURCE, SOURCES } from "./const.js";
+import { MODULE_ID, SLUG_TO_SOURCE, SOURCE_UUIDS, SOURCES } from "./const.js";
 import {
-  convertUUIDBasedOnSystem,
+  convertItemUUIDBasedOnSystem,
+  getSpellRange,
   messageItemHasRollOption,
   setupSummonedTokenRefreshHooks,
 } from "./helpers.js";
@@ -27,6 +28,12 @@ import { setupWoodDoubleHooks } from "./specificCases/woodenDouble.js";
 import { setupDisableItemHooks } from "./disableItems.js";
 import { setupAPI } from "./api.js";
 import { modifyActorsMenu } from "./customizeTokens.js";
+import { setupWallHooks } from "./specificCases/walls.js";
+import { setupTurnReminders } from "./summonReminder.js";
+import { setupLightsHooks } from "./specificCases/lights.js";
+import { setupThaumaturgeHooks } from "./specificClasses/thaumaturge.js";
+import { setupBilocationHooks } from "./specificCases/bilocation.js";
+import { setupBrewrata } from "./lib/brewrata.js";
 
 Hooks.once("init", async function () {
   loadTemplates([`modules/${MODULE_ID}/templates/updateMessage.hbs`]);
@@ -45,6 +52,8 @@ Hooks.once("ready", async function () {
   handleUpdateMessage();
   setupSpecificHooks();
   setupDisableItemHooks();
+  setupTurnReminders();
+  setupBrewrata();
 
   if (game.settings.get(MODULE_ID, "refresh.summons")) {
     setupSummonedTokenRefreshHooks();
@@ -55,6 +64,7 @@ Hooks.once("ready", async function () {
 
     const isBindHeroicSpiritSuccess = isBindHeroicSpiritHit(chatMessage);
 
+    if (chatMessage.isDamageRoll) return;
     if (chatMessage.isRoll && !isBindHeroicSpiritSuccess) return;
 
     // Handle Specific Case Bind Heroic Spirit
@@ -62,39 +72,51 @@ Hooks.once("ready", async function () {
       ? SOURCES.NECROMANCER.BIND_HEROIC_SPIRIT_STRIKE
       : chatMessage?.item?.sourceId;
 
-    if (!itemUuid) {
-      itemUuid =
-        convertUUIDBasedOnSystem(itemUuid) ||
-        SLUG_TO_SOURCE[
-          chatMessage?.item?.slug ||
-            game.pf2e.system.sluggify(chatMessage?.item?.name || "")
-        ];
-      if (!itemUuid) return;
+    if (!SOURCE_UUIDS.has(itemUuid)) {
+      itemUuid = convertItemUUIDBasedOnSystem(itemUuid);
+
+      if (!SOURCE_UUIDS.has(itemUuid)) {
+        itemUuid =
+          SLUG_TO_SOURCE[
+            chatMessage?.item?.slug ||
+              game?.pf2e.system.sluggify(chatMessage?.item?.name || "")
+          ];
+      }
+      if (!SOURCE_UUIDS.has(itemUuid)) return;
     }
 
-    if (chatMessage?.flags?.pf2e?.appliedDamage) return;
+    if (chatMessage?.flags?.[game.system.id]?.appliedDamage) return;
 
     let summonLevel = 20;
 
     const summonerActor = ChatMessage.getSpeakerActor(chatMessage.speaker);
 
-    const spellRank = chatMessage?.flags?.pf2e?.origin?.castRank ?? 0;
+    const spellRank =
+      chatMessage?.flags?.[game.system.id]?.origin?.castRank ?? 0;
     const spellRelevantInfo = {
       rank: spellRank,
       summonerLevel: summonerActor.level,
       summonerRollOptions: Object.keys(
-        summonerActor?.flags?.pf2e?.rollOptions?.all,
+        summonerActor?.flags?.[game.system.id]?.rollOptions?.all ?? {},
       ),
       summonerActorId: summonerActor.id,
-      itemRollOptions: chatMessage?.flags?.pf2e?.context?.options ?? [],
+      itemRollOptions:
+        chatMessage?.flags?.[game.system.id]?.context?.options ?? [],
+
+      dc: chatMessage?.item?.spellcasting?.statistic?.dc?.value ?? 0,
     };
     //Grab DC for Incarnate spells
-    if (isIncarnate(chatMessage))
+    if (isIncarnate(chatMessage) && spellRelevantInfo.dc === 0)
       spellRelevantInfo.dc = extractDCValueRegex(chatMessage.content) ?? 0;
     if (isMechanic(chatMessage)) {
       setMechanicRelevantInfo(summonerActor, spellRelevantInfo);
     }
-    if (isSummoner(chatMessage)) {
+    if (
+      isSummoner(chatMessage) ||
+      [SOURCES.MISC.SWARM_FORTH, SOURCES.MISC.RAISE_THE_HORDE].includes(
+        itemUuid,
+      )
+    ) {
       setSummonerRelevantInfo(summonerActor, spellRelevantInfo);
     }
     if (itemUuid === SOURCES.COMMANDER.PLANT_BANNER) {
@@ -112,6 +134,23 @@ Hooks.once("ready", async function () {
       spellRelevantInfo.position = token ? token.center : null;
     }
 
+    if (
+      chatMessage?.item?.system?.range?.value &&
+      game.settings.get(MODULE_ID, "automation.limit-range")
+    ) {
+      spellRelevantInfo.range = getSpellRange(
+        chatMessage?.item?.system?.range?.value,
+      );
+      if (
+        spellRelevantInfo &&
+        chatMessage?.flags?.pf2e?.context?.options?.includes(
+          "spellshape:reach-spell",
+        )
+      ) {
+        spellRelevantInfo.range += 30;
+      }
+    }
+
     let summonDetailsGroup = await getSpecificSummonDetails(
       itemUuid,
       spellRelevantInfo,
@@ -124,8 +163,49 @@ Hooks.once("ready", async function () {
     }
 
     if (!summonDetailsGroup || summonDetailsGroup?.length === 0) return;
+    const summonerToken =
+      chatMessage?.token?.object ||
+      canvas.tokens.placeables.find(
+        (t) => t?.actor?.id === spellRelevantInfo.summonerActorId,
+      );
 
     summonDetailsGroup.forEach((group) => {
+      // This will limit reach for specific ones
+      if (
+        game.settings.get(MODULE_ID, "automation.limit-range") &&
+        spellRelevantInfo?.range &&
+        !group?.crosshairParameters?.location
+      ) {
+        if (
+          summonerToken &&
+          !(group?.crosshairParameters instanceof Function)
+        ) {
+          foundry.utils.mergeObject(group, {
+            crosshairParameters: {
+              location: {
+                obj: summonerToken,
+                limitMaxRange: spellRelevantInfo.range,
+                displayRangePoly: true,
+                rangePolyLineColor: 0x0,
+                rangePolyFillColor: 0x0,
+              },
+              snap: {
+                direction: 360,
+              },
+            },
+          });
+        }
+      }
+
+      if (summonerToken) {
+        foundry.utils.mergeObject(group, {
+          tokenModifications: {
+            level: summonerToken?.document?.level,
+            elevation: summonerToken?.document?.elevation || 0,
+          },
+        });
+      }
+
       group?.itemsToAdd?.forEach((item) => {
         if (item?.system) {
           item.system.context = {
@@ -164,6 +244,7 @@ Hooks.once("ready", async function () {
       summonerLevel: item?.actor?.level ?? 0,
       tokenWidth: 1,
       tokenHeight: 1,
+      ignoreDialogue: true,
     };
     const summonDetails = await getSpecificSummonDetails(uuid, dat);
     if (!summonDetails) return;
@@ -203,7 +284,11 @@ function setupSpecificHooks() {
   //Classes
   setNecromancerHooks();
   setupCommanderHooks();
+  setupThaumaturgeHooks();
 
   // Specific Cases
+  setupBilocationHooks();
+  setupLightsHooks();
+  setupWallHooks();
   setupWoodDoubleHooks();
 }
