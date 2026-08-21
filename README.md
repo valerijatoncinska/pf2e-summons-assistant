@@ -3,7 +3,7 @@
 ![](https://img.shields.io/endpoint?url=https%3A%2F%2Ffoundryshields.com%2Fversion%3Fstyle%3Dflat%26url%3Dhttps%3A%2F%2Fraw.githubusercontent.com%2FChasarooniZ%2Fpf2e-summons-assistant%2Fmain%2Fmodule.json)
 
 ![All Downloads](https://img.shields.io/github/downloads/ChasarooniZ/pf2e-summons-assistant/total?color=5e0000&label=All%20Downloads)
-![Latest Release Download Count](https://img.shields.io/github/downloads/ChasarooniZ/pf2e-summons-assistant>/latest/module.zip)
+![Latest Release Download Count](https://img.shields.io/github/downloads/ChasarooniZ/pf2e-summons-assistant/latest/module.zip)
 ![Forge Installs](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Fpf2e-summons-assistant&colorB=4aa94a)
 
 [![gitlocalized ](https://gitlocalize.com/repo/10293/whole_project/badge.svg)](https://gitlocalize.com/repo/10293?utm_source=badge) [![](https://img.shields.io/badge/ko--fi-donate-%23FF5E5B?style=flat-square&logo=ko-fi&logoColor=white)](https://ko-fi.com/Chasarooni)
@@ -30,7 +30,7 @@ _a Thanks to Vauxs for updating [Foundry Summons](https://foundryvtt.com/package
   - [Changelog](#changelog)
   - [Handled Spells and Features](#handled-spells-and-features)
     - [Spells](#spells)
-    - [Feats / Feaatures](#feats--feaatures)
+    - [Feats / Features](#feats--features)
     - [Items](#items)
     - [SF2e](#sf2e)
   - [Monster Actions](#monster-actions)
@@ -77,7 +77,7 @@ You can access the changelog [here](/CHANGELOG.md).
   - `Create Thrall`
     - _Puppeteer_ - Basic support (does not handle 1 / round atm)
     - _Spirit_ - Adds two new strike damage types
-    - *Bone* - Adds 5 speed to all thralls
+    - _Bone_ - Adds 5 speed to all thralls
     - _The Hallowed Dead_
   - `Inevitable Return`
   - `Living Graveyard`
@@ -107,11 +107,12 @@ You can access the changelog [here](/CHANGELOG.md).
   - `Telekinetic Hand` - Art Requires `JB2a`
   - `Wooden Double` - Places Wooden Double, and then asks you to step, also handles the damage overflow if you toggle the setting
 
-### Feats / Feaatures
+### Feats / Features
 
 - **Commander**
   - `Plant Banner` - Basic Case (no handling of feat interactions beyond base case atm)
 - **Kineticist**
+  - `Fearsome Familiar`
   - `Timber Sentinel` - Does not do any automation as of yet
   - `Jagged Berm` - Requires `JB2a` free for the spikes
 - **Thaumaturge**
@@ -160,7 +161,7 @@ You can access the changelog [here](/CHANGELOG.md).
 
   <img width="400" alt="image" src="https://github.com/user-attachments/assets/a3dacc09-ef60-4305-99e9-68dee50c89cb" />
 
-- `Customizable Summons` - On item that summons (Spell/Action/Equipment/ etc.) there is a new sheet header button that will allow you to customize the summon as you wish
+- `Customizable Summons and their art` - On item that summons (Spell/Action/Equipment/ etc.) there is a new sheet header button that will allow you to customize the summon as you wish
 
   <img width="400" alt="image" src="https://github.com/user-attachments/assets/098566d5-74ff-4b24-bfd7-bd1ccc7279fe" />
 

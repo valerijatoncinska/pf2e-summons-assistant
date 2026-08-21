@@ -1,9 +1,20 @@
 ## Unreleased
 
+## 2.12.1
+
+- **Update**
+  - Fixed bug with Fearsome Familiar where misnamed variable lead to no summon options
+
+## 2.12.0
+
+- **New**
+  - Fearsome Familiar (❔ @thecoolersub)
+- **Update**
+  - Fixed customization not working for sf2e (🐛 @mechamaya)
+
 ## 2.11.3
 
 - Fixed issue with skeletal lancers thrall (🖥️@Suldrun45)
-
 
 ## 2.11.2
 
